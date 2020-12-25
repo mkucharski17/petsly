@@ -21,6 +21,8 @@ class App extends StatelessWidget {
         builder: (context, snapshot) {
           // Check for errors
           if (snapshot.hasError) {
+            print("hello world");
+            print(snapshot.error.toString());
             return Text('sth went wrong');
           }
 
