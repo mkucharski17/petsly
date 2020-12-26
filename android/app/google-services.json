@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "741479128960",
+    "firebase_url": "https://petsly-f0326.firebaseio.com",
+    "project_id": "petsly-f0326",
+    "storage_bucket": "petsly-f0326.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741479128960:android:613f7aee2fe5c92663ab65",
+        "android_client_info": {
+          "package_name": "com.kucharski.petsly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741479128960-r6jfdgb70892h6211ov4bbsehmd8a91c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-RNEp3rIqJ2BxGaEs4dWfk33M9rMTxgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741479128960-r6jfdgb70892h6211ov4bbsehmd8a91c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "741479128960-1ahthgentbhunqm22dljoafco3pr0vba.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kucharski.petsly"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
