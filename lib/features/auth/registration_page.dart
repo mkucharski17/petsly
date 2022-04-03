@@ -96,7 +96,7 @@ class _Form extends HookWidget {
                 const Padding(
                   padding: EdgeInsets.all(24),
                   child: Text(
-                    'Złe hasło lub e-mail',
+                    'Podane dane są niepoprawne. Spróbuj ponownie',
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
