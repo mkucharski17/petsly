@@ -79,7 +79,7 @@ class _Form extends HookWidget {
                   obscureText: true,
                 ).columnPadded24,
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 24),
               SizedBox(
                 width: 128,
                 child: ElevatedButton(

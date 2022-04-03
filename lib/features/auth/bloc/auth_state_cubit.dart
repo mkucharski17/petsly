@@ -23,9 +23,7 @@ class AuthStateCubit extends Cubit<AuthState> {
     }
   }
 
-  void signOut() {
-    FirebaseAuth.instance.signOut();
-  }
+  void signOut() => FirebaseAuth.instance.currentUser;
 
   @override
   Future<void> close() async {

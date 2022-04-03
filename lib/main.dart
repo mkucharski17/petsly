@@ -6,7 +6,7 @@ import 'package:petsly/features/auth/init_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final x = await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   runApp(PetslyApp());
 }

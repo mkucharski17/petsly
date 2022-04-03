@@ -28,6 +28,7 @@ class LoginScreen extends HookWidget {
     return BlocProvider(
       create: (context) => LoginFormCubit(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Column(
             children: [
@@ -81,7 +82,7 @@ class _Form extends HookWidget {
                   obscureText: true,
                 ).columnPadded24,
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 24),
               SizedBox(
                 width: 128,
                 child: ElevatedButton(
@@ -126,7 +127,7 @@ class _DoNotHaveAccount extends StatelessWidget {
           onPressed: () =>
               Navigator.of(context).push(RegistrationScreenRoute()),
           child: const Text(
-            'Zarejestruj',
+            'Zarejestruj się',
             style: TextStyle(
               color: Colors.black,
               decoration: TextDecoration.underline,

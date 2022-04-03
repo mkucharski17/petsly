@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/profile/profile.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page<void> {
@@ -23,7 +24,7 @@ class HomeScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selectedIndex = useState(0);
+    final selectedIndex = useState<int>(0);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,9 +38,11 @@ class HomeScreen extends HookWidget {
         ],
       ),
       bottomNavigationBar: _BottomBar(selectedIndex: selectedIndex),
-      body: const AnimatedSwitcher(
-        duration: Duration(milliseconds: 500),
-        child: _BodyChild(),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: _BodyChild(
+          index: selectedIndex.value,
+        ),
       ),
     );
   }
@@ -58,11 +61,24 @@ class HomeScreen extends HookWidget {
 }
 
 class _BodyChild extends StatelessWidget {
-  const _BodyChild({Key? key}) : super(key: key);
+  const _BodyChild({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    if (index == 0) {
+      return const Text('szukaj');
+    } else if (index == 1) {
+      return const UserProfile();
+    } else if (index == 2) {
+      return Text('Ulubione osoby');
+    } else {
+      return Text('Twoje rozmowy');
+    }
   }
 }
 
