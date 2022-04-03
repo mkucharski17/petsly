@@ -1,42 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:petsly/features/auth/bloc/login_form_cubit.dart';
-import 'package:petsly/features/auth/registration_page.dart';
+import 'package:petsly/features/auth/bloc/registration_form_cubit.dart';
 import 'package:petsly/ui/ui.dart';
 
-class LoginPage extends Page<void> {
-  const LoginPage({LocalKey? key}) : super(key: key);
+class RegistrationPage extends Page<void> {
+  const RegistrationPage({LocalKey? key}) : super(key: key);
 
   @override
-  Route<void> createRoute(BuildContext context) => LoginScreenRoute(page: this);
+  Route<void> createRoute(BuildContext context) =>
+      RegistrationScreenRoute(page: this);
 }
 
-class LoginScreenRoute extends MaterialPageRoute<void> {
-  LoginScreenRoute({LoginPage? page})
+class RegistrationScreenRoute extends MaterialPageRoute<void> {
+  RegistrationScreenRoute({RegistrationPage? page})
       : super(
           settings: page,
-          builder: (context) => const LoginScreen(),
+          builder: (context) => const RegistrationScreen(),
         );
 }
 
-class LoginScreen extends HookWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegistrationScreen extends HookWidget {
+  const RegistrationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginFormCubit(),
+      create: (context) => RegistrationFormCubit(),
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Stwórz konto'),
+        ),
         body: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 128),
-              Image.asset(
-                'assets/petsly_logo.png',
-                width: 120,
-                height: 120,
-              ),
               const SizedBox(height: 64),
               const _Form(),
             ],
@@ -52,7 +49,7 @@ class _Form extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginFormCubit, LoginFormState>(
+    return BlocBuilder<RegistrationFormCubit, RegistrationFormState>(
       builder: (context, state) {
         return Expanded(
           child: Column(
@@ -61,7 +58,7 @@ class _Form extends HookWidget {
                 height: 78,
                 child: TextFormField(
                   onChanged: (value) =>
-                      context.read<LoginFormCubit>().updateEmail(value),
+                      context.read<RegistrationFormCubit>().updateEmail(value),
                   decoration: InputDecoration(
                     label: const Text('email'),
                     errorText: state.email.error,
@@ -72,8 +69,9 @@ class _Form extends HookWidget {
               SizedBox(
                 height: 78,
                 child: TextFormField(
-                  onChanged: (value) =>
-                      context.read<LoginFormCubit>().updatePassword(value),
+                  onChanged: (value) => context
+                      .read<RegistrationFormCubit>()
+                      .updatePassword(value),
                   decoration: InputDecoration(
                     label: const Text('password'),
                     errorText: state.password.error,
@@ -88,8 +86,10 @@ class _Form extends HookWidget {
                   onPressed:
                       state.email.error != null || state.password.error != null
                           ? null
-                          : () => context.read<LoginFormCubit>().tryLogin(),
-                  child: const Text('Zaloguj'),
+                          : () => context
+                              .read<RegistrationFormCubit>()
+                              .tryRegistration(),
+                  child: const Text('Zarejestruj'),
                 ),
               ),
               if (state.error)
@@ -100,8 +100,6 @@ class _Form extends HookWidget {
                     style: TextStyle(color: Colors.red),
                   ),
                 ),
-              const Spacer(),
-              const _DoNotHaveAccount(),
             ],
           ),
         );
@@ -123,8 +121,7 @@ class _DoNotHaveAccount extends StatelessWidget {
           style: TextStyle(fontSize: 14),
         ),
         TextButton(
-          onPressed: () =>
-              Navigator.of(context).push(RegistrationScreenRoute()),
+          onPressed: () {},
           child: const Text(
             'Zarejestruj',
             style: TextStyle(

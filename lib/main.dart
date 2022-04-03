@@ -20,8 +20,7 @@ class PetslyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.light,
-          colorScheme: const ColorScheme.light(),
-          primaryColor: Colors.white,
+          colorScheme: const ColorScheme.light(primary: Colors.blueAccent),
           fontFamily: 'LexendDeca',
         ),
         darkTheme: ThemeData(
