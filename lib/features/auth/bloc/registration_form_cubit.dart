@@ -4,6 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:petsly/data/auth/auth.dart';
 import 'package:petsly/utils/utils.dart';
+import 'package:petsly/utils/validator/name_valdiator.dart';
+import 'package:petsly/utils/validator/phone_validator.dart';
 
 part 'registration_form_cubit.freezed.dart';
 
@@ -13,6 +15,8 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
           const RegistrationFormState(
             email: FormField<String?>(validator: EmailValidator.isValid),
             password: FormField<String?>(validator: PasswordValidator.isValid),
+            phone: FormField<String?>(validator: PhoneValidator.isValid),
+            name: FormField<String?>(validator: NameValidator.isValid),
           ),
         );
 
@@ -23,7 +27,7 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
     final email = state.email.copyWith(field: value);
 
     emit(state.copyWith(
-      email: email.validate('Wrong email format'),
+      email: email.validate('Format adresu e-mail jest niepoprawny'),
       error: false,
     ));
   }
@@ -33,7 +37,29 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
 
     emit(
       state.copyWith(
-        password: password.validate('Password must have at least 6 characters'),
+        password: password.validate('Hasło musi mieć więcej niż 6 znaków '),
+        error: false,
+      ),
+    );
+  }
+
+  void updateName(String value) {
+    final name = state.name.copyWith(field: value);
+
+    emit(
+      state.copyWith(
+        name: name.validate('Imię nie może być puste'),
+        error: false,
+      ),
+    );
+  }
+
+  void updatePhone(String value) {
+    final phone = state.phone.copyWith(field: value);
+
+    emit(
+      state.copyWith(
+        phone: phone.validate('Telefon musi mieć 9 cyfr'),
         error: false,
       ),
     );
@@ -46,7 +72,8 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
         email: state.email.field,
         password: state.password.field,
       );
-      _logger.e('Singed in successfully');
+
+      _logger.i('Singed in successfully');
 
       emit(state.copyWith(loading: false));
     } catch (e) {
@@ -64,6 +91,8 @@ class RegistrationFormState with _$RegistrationFormState {
   const factory RegistrationFormState({
     @Default(FormField()) FormField email,
     @Default(FormField()) FormField password,
+    @Default(FormField()) FormField phone,
+    @Default(FormField()) FormField name,
     @Default(false) bool loading,
     @Default(false) bool error,
   }) = _RegistrationFormState;

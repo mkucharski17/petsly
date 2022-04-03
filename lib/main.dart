@@ -1,8 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/auth/bloc/registration_form_cubit.dart';
 import 'package:petsly/features/auth/init_page.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,14 +44,27 @@ class _GlobalProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        BlocProvider(
-          lazy: false,
-          create: (create) => AuthStateCubit(),
-        ),
+        Provider(
+          create: (context) => Firestore(),
+        )
       ],
-      child: app,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => RegistrationFormCubit(),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (context) => AuthStateCubit(
+              registrationFormCubit: context.read(),
+              firestore: context.read(),
+            ),
+          ),
+        ],
+        child: app,
+      ),
     );
   }
 }

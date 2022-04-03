@@ -21,11 +21,15 @@ class _$RegistrationFormStateTearOff {
   _RegistrationFormState call(
       {FormField<dynamic> email = const FormField(),
       FormField<dynamic> password = const FormField(),
+      FormField<dynamic> phone = const FormField(),
+      FormField<dynamic> name = const FormField(),
       bool loading = false,
       bool error = false}) {
     return _RegistrationFormState(
       email: email,
       password: password,
+      phone: phone,
+      name: name,
       loading: loading,
       error: error,
     );
@@ -39,6 +43,8 @@ const $RegistrationFormState = _$RegistrationFormStateTearOff();
 mixin _$RegistrationFormState {
   FormField<dynamic> get email => throw _privateConstructorUsedError;
   FormField<dynamic> get password => throw _privateConstructorUsedError;
+  FormField<dynamic> get phone => throw _privateConstructorUsedError;
+  FormField<dynamic> get name => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   bool get error => throw _privateConstructorUsedError;
 
@@ -55,11 +61,15 @@ abstract class $RegistrationFormStateCopyWith<$Res> {
   $Res call(
       {FormField<dynamic> email,
       FormField<dynamic> password,
+      FormField<dynamic> phone,
+      FormField<dynamic> name,
       bool loading,
       bool error});
 
   $FormFieldCopyWith<dynamic, $Res> get email;
   $FormFieldCopyWith<dynamic, $Res> get password;
+  $FormFieldCopyWith<dynamic, $Res> get phone;
+  $FormFieldCopyWith<dynamic, $Res> get name;
 }
 
 /// @nodoc
@@ -75,6 +85,8 @@ class _$RegistrationFormStateCopyWithImpl<$Res>
   $Res call({
     Object? email = freezed,
     Object? password = freezed,
+    Object? phone = freezed,
+    Object? name = freezed,
     Object? loading = freezed,
     Object? error = freezed,
   }) {
@@ -86,6 +98,14 @@ class _$RegistrationFormStateCopyWithImpl<$Res>
       password: password == freezed
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
+              as FormField<dynamic>,
+      phone: phone == freezed
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as FormField<dynamic>,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as FormField<dynamic>,
       loading: loading == freezed
           ? _value.loading
@@ -111,6 +131,20 @@ class _$RegistrationFormStateCopyWithImpl<$Res>
       return _then(_value.copyWith(password: value));
     });
   }
+
+  @override
+  $FormFieldCopyWith<dynamic, $Res> get phone {
+    return $FormFieldCopyWith<dynamic, $Res>(_value.phone, (value) {
+      return _then(_value.copyWith(phone: value));
+    });
+  }
+
+  @override
+  $FormFieldCopyWith<dynamic, $Res> get name {
+    return $FormFieldCopyWith<dynamic, $Res>(_value.name, (value) {
+      return _then(_value.copyWith(name: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -123,6 +157,8 @@ abstract class _$RegistrationFormStateCopyWith<$Res>
   $Res call(
       {FormField<dynamic> email,
       FormField<dynamic> password,
+      FormField<dynamic> phone,
+      FormField<dynamic> name,
       bool loading,
       bool error});
 
@@ -130,6 +166,10 @@ abstract class _$RegistrationFormStateCopyWith<$Res>
   $FormFieldCopyWith<dynamic, $Res> get email;
   @override
   $FormFieldCopyWith<dynamic, $Res> get password;
+  @override
+  $FormFieldCopyWith<dynamic, $Res> get phone;
+  @override
+  $FormFieldCopyWith<dynamic, $Res> get name;
 }
 
 /// @nodoc
@@ -147,6 +187,8 @@ class __$RegistrationFormStateCopyWithImpl<$Res>
   $Res call({
     Object? email = freezed,
     Object? password = freezed,
+    Object? phone = freezed,
+    Object? name = freezed,
     Object? loading = freezed,
     Object? error = freezed,
   }) {
@@ -158,6 +200,14 @@ class __$RegistrationFormStateCopyWithImpl<$Res>
       password: password == freezed
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
+              as FormField<dynamic>,
+      phone: phone == freezed
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
+              as FormField<dynamic>,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as FormField<dynamic>,
       loading: loading == freezed
           ? _value.loading
@@ -177,6 +227,8 @@ class _$_RegistrationFormState implements _RegistrationFormState {
   const _$_RegistrationFormState(
       {this.email = const FormField(),
       this.password = const FormField(),
+      this.phone = const FormField(),
+      this.name = const FormField(),
       this.loading = false,
       this.error = false});
 
@@ -188,6 +240,12 @@ class _$_RegistrationFormState implements _RegistrationFormState {
   final FormField<dynamic> password;
   @JsonKey()
   @override
+  final FormField<dynamic> phone;
+  @JsonKey()
+  @override
+  final FormField<dynamic> name;
+  @JsonKey()
+  @override
   final bool loading;
   @JsonKey()
   @override
@@ -195,7 +253,7 @@ class _$_RegistrationFormState implements _RegistrationFormState {
 
   @override
   String toString() {
-    return 'RegistrationFormState(email: $email, password: $password, loading: $loading, error: $error)';
+    return 'RegistrationFormState(email: $email, password: $password, phone: $phone, name: $name, loading: $loading, error: $error)';
   }
 
   @override
@@ -205,6 +263,8 @@ class _$_RegistrationFormState implements _RegistrationFormState {
             other is _RegistrationFormState &&
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality().equals(other.password, password) &&
+            const DeepCollectionEquality().equals(other.phone, phone) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.loading, loading) &&
             const DeepCollectionEquality().equals(other.error, error));
   }
@@ -214,6 +274,8 @@ class _$_RegistrationFormState implements _RegistrationFormState {
       runtimeType,
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(password),
+      const DeepCollectionEquality().hash(phone),
+      const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(loading),
       const DeepCollectionEquality().hash(error));
 
@@ -228,6 +290,8 @@ abstract class _RegistrationFormState implements RegistrationFormState {
   const factory _RegistrationFormState(
       {FormField<dynamic> email,
       FormField<dynamic> password,
+      FormField<dynamic> phone,
+      FormField<dynamic> name,
       bool loading,
       bool error}) = _$_RegistrationFormState;
 
@@ -235,6 +299,10 @@ abstract class _RegistrationFormState implements RegistrationFormState {
   FormField<dynamic> get email;
   @override
   FormField<dynamic> get password;
+  @override
+  FormField<dynamic> get phone;
+  @override
+  FormField<dynamic> get name;
   @override
   bool get loading;
   @override
