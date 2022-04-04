@@ -6,6 +6,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/profile/change_data_dialog.dart';
+import 'package:petsly/ui/divider.dart';
+import 'package:petsly/ui/ui.dart';
+import 'package:petsly/utils/validator/name_valdiator.dart';
+import 'package:petsly/utils/validator/phone_validator.dart';
 import 'package:provider/provider.dart';
 
 class UserProfile extends StatelessWidget {
@@ -54,10 +59,29 @@ class _Body extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final photoLoading = useState(false);
+    final phone = userDoc.mappedData['phone'];
+    final name = userDoc.mappedData['name'];
 
-    return Column(
+    return ListView(
+      shrinkWrap: true,
       children: [
-        const SizedBox(height: 24),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () {
+            context.read<AuthStateCubit>().deleteUser();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const Icon(
+                Icons.close,
+                color: Colors.red,
+              ),
+              const Text('Usuń konto')
+            ],
+          ).columnPadded24,
+        ),
+        const SizedBox(height: 36),
         _Image(
           photoUrl: photoUrl,
           photoLoading: photoLoading,
@@ -68,8 +92,44 @@ class _Body extends HookWidget {
           photoUrl: photoUrl,
           photoLoading: photoLoading,
         ),
-        Text(userDoc.mappedData['phone']),
-        Text(userDoc.mappedData['name']),
+        const SizedBox(height: 16),
+        const PetslyDivider(),
+        _DataSection(
+          fieldKey: 'phone',
+          docId: userDoc.id,
+          title: 'Telefon',
+          value: phone,
+          validator: (phone) {
+            return PhoneValidator.isValid(phone)
+                ? null
+                : 'Telefon musi mieć 9 cyfr';
+          },
+        ),
+        const PetslyDivider().columnPadded24,
+        _DataSection(
+          fieldKey: 'name',
+          docId: userDoc.id,
+          title: 'Imię',
+          value: name,
+          validator: (name) {
+            return NameValidator.isValid(name)
+                ? null
+                : 'Imię nie może być puste';
+          },
+        ),
+        const PetslyDivider().columnPadded24,
+        _DataSection(
+          fieldKey: 'description',
+          docId: userDoc.id,
+          title: 'Opis',
+          validator: (desc) => '',
+          maxLines: 4,
+          value: 'Hej, fsdjkfdjs kl fd s fd s f fsd f ds fdsf'
+              'dsfjdf d fsd f sd fds f ds f fsd fds f fds  fds f ds fds'
+              ' f ds fsd  fs fsd f ds fsd  dssknfd sjknfjds nfjkds fnjds'
+              ' fjds nfdkls jfdkls jfdksl jfklsdj flkdsj flkdsj kfl',
+        ),
+        const SizedBox(height: 24),
       ],
     );
   }
@@ -103,8 +163,8 @@ class _Image extends StatelessWidget {
           opacity: photoLoading.value ? 0.5 : 1,
           child: ClipOval(
             child: CachedNetworkImage(
-              width: 128,
-              height: 128,
+              width: 164,
+              height: 164,
               imageUrl: photoUrl,
               fit: BoxFit.cover,
             ),
@@ -130,38 +190,42 @@ class _ChangePhotoButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: () => _loadImage(context, ImageSource.camera),
-          child: Container(
-            width: 144,
-            height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.blue),
+              onTap: () => _loadImage(context, ImageSource.camera),
+              child: Container(
+                width: 144,
+                height: 48,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.blue),
+                ),
+                child: const Text('Zrób zdjęcie'),
+              ),
             ),
-            child: const Text('Zrób zdjęcie'),
-          ),
+            const SizedBox(width: 24),
+            InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () => _loadImage(context, ImageSource.gallery),
+              child: Container(
+                width: 144,
+                height: 48,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.blue),
+                ),
+                child: const Text('Wybierz zdjęcie'),
+              ),
+            )
+          ],
         ),
-        const SizedBox(width: 24),
-        InkWell(
-          borderRadius: BorderRadius.circular(24),
-          onTap: () => _loadImage(context, ImageSource.gallery),
-          child: Container(
-            width: 144,
-            height: 48,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.blue),
-            ),
-            child: const Text('Wybierz zdjęcie'),
-          ),
-        )
       ],
     );
   }
@@ -185,11 +249,107 @@ class _ChangePhotoButtons extends StatelessWidget {
       await context.read<Firestore>().updateDocument(
         collectionPath: 'users',
         docId: id,
-        data: {
-          'photoUrl': imageUri,
-        },
+        data: {'photoUrl': imageUri},
       );
       photoLoading.value = false;
     }
+  }
+}
+
+class _DataSection extends HookWidget {
+  const _DataSection({
+    Key? key,
+    required this.title,
+    required this.fieldKey,
+    required this.value,
+    required this.validator,
+    required this.docId,
+    this.maxLines,
+  }) : super(key: key);
+
+  final String title;
+  final String fieldKey;
+  final String value;
+  final Validator validator;
+  final String docId;
+  final int? maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    final loading = useState(false);
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          value,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  InkWell(
+                    onTap: () async {
+                      final changedText = await ChangeDataDialog.show(
+                        context,
+                        initialText: value,
+                        validator: validator,
+                        maxLines: maxLines,
+                      );
+
+                      if (changedText != null && changedText != value) {
+                        loading.value = true;
+                        await context.read<Firestore>().updateDocument(
+                          collectionPath: 'users',
+                          docId: docId,
+                          data: {fieldKey: changedText},
+                        );
+                        loading.value = false;
+                      }
+                    },
+                    child: const Text(
+                      'Edytuj',
+                      style: TextStyle(
+                          color: Colors.black,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.black),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (loading.value) ...[
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.2),
+            ),
+          ),
+          const CircularProgressIndicator(),
+        ]
+      ],
+    );
   }
 }

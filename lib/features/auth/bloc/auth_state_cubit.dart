@@ -41,6 +41,11 @@ class AuthStateCubit extends Cubit<AuthState> {
 
   void signOut() => FirebaseAuth.instance.signOut();
 
+  void deleteUser() {
+    FirebaseAuth.instance.currentUser!.delete();
+    signOut();
+  }
+
   Future<void> _addUserData({
     required String id,
     required String phone,
