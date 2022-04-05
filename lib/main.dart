@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/auth/bloc/registration_form_cubit.dart';
 import 'package:petsly/features/auth/init_page.dart';
+import 'package:petsly/features/location/location_service.dart';
+import 'package:petsly/features/location/location_source.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -48,7 +51,15 @@ class _GlobalProviders extends StatelessWidget {
       providers: [
         Provider(
           create: (context) => Firestore(),
-        )
+        ),
+        Provider(
+          create: (context) => LocationService(Location()),
+        ),
+        Provider(
+          create: (context) => LocationSource(
+            context.read(),
+          ),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [

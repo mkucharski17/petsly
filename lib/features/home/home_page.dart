@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/offers/offers_map.dart';
 import 'package:petsly/features/profile/profile.dart';
 import 'package:provider/provider.dart';
 
@@ -71,7 +72,7 @@ class _BodyChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (index == 0) {
-      return const Text('szukaj');
+      return const OffersMap();
     } else if (index == 1) {
       return const UserProfile();
     } else if (index == 2) {
