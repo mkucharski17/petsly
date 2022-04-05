@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -39,11 +40,12 @@ class AuthStateCubit extends Cubit<AuthState> {
     }
   }
 
-  void signOut() => FirebaseAuth.instance.signOut();
+  Future<void> signOut() => FirebaseAuth.instance.signOut();
 
-  void deleteUser() {
-    FirebaseAuth.instance.currentUser!.delete();
-    signOut();
+  Future<void> deleteUser(String docId) async {
+    await FirebaseFirestore.instance.collection('users').doc(docId).delete();
+    await FirebaseAuth.instance.currentUser!.delete();
+    return signOut();
   }
 
   Future<void> _addUserData({

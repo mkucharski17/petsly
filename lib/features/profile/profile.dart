@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/profile/change_data_dialog.dart';
+import 'package:petsly/features/profile/delete_account_dialog.dart';
 import 'package:petsly/ui/divider.dart';
 import 'package:petsly/ui/ui.dart';
 import 'package:petsly/utils/validator/name_valdiator.dart';
@@ -42,7 +43,7 @@ class UserProfile extends StatelessWidget {
               return _Body(photoUrl: photoUrl, userDoc: userDoc);
             },
           )
-        : const CircularProgressIndicator();
+        : const Center(child: CircularProgressIndicator());
   }
 }
 
@@ -61,14 +62,19 @@ class _Body extends HookWidget {
     final photoLoading = useState(false);
     final phone = userDoc.mappedData['phone'];
     final name = userDoc.mappedData['name'];
+    final description = userDoc.mappedData['description'];
 
     return ListView(
       shrinkWrap: true,
       children: [
         const SizedBox(height: 8),
         InkWell(
-          onTap: () {
-            context.read<AuthStateCubit>().deleteUser();
+          onTap: () async {
+            final deleteAccount = await DeleteAccountDialog.show(context);
+
+            if (deleteAccount ?? false) {
+              context.read<AuthStateCubit>().deleteUser(userDoc.id);
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -122,12 +128,9 @@ class _Body extends HookWidget {
           fieldKey: 'description',
           docId: userDoc.id,
           title: 'Opis',
-          validator: (desc) => '',
+          validator: (desc) => null,
           maxLines: 4,
-          value: 'Hej, fsdjkfdjs kl fd s fd s f fsd f ds fdsf'
-              'dsfjdf d fsd f sd fds f ds f fsd fds f fds  fds f ds fds'
-              ' f ds fsd  fs fsd f ds fsd  dssknfd sjknfjds nfjkds fnjds'
-              ' fjds nfdkls jfdkls jfdksl jfklsdj flkdsj flkdsj kfl',
+          value: description ?? '',
         ),
         const SizedBox(height: 24),
       ],
