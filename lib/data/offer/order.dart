@@ -10,6 +10,7 @@ enum OrderStatus { requested, rejected, accepted }
 @freezed
 class Order with _$Order {
   const factory Order({
+    required String id,
     required String clientId,
     required Offer offer,
     required OrderStatus status,
@@ -17,4 +18,17 @@ class Order with _$Order {
   }) = _Order;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+}
+
+extension OrderStatusExt on OrderStatus {
+  String get text {
+    switch (this) {
+      case OrderStatus.accepted:
+        return 'Potwierdzone';
+      case OrderStatus.requested:
+        return 'Czeka na potwierdzenie';
+      case OrderStatus.rejected:
+        return 'Odrzucone';
+    }
+  }
 }

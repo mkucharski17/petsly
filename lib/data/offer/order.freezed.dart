@@ -23,11 +23,13 @@ class _$OrderTearOff {
   const _$OrderTearOff();
 
   _Order call(
-      {required String clientId,
+      {required String id,
+      required String clientId,
       required Offer offer,
       required OrderStatus status,
       required List<DateTime> days}) {
     return _Order(
+      id: id,
       clientId: clientId,
       offer: offer,
       status: status,
@@ -45,6 +47,7 @@ const $Order = _$OrderTearOff();
 
 /// @nodoc
 mixin _$Order {
+  String get id => throw _privateConstructorUsedError;
   String get clientId => throw _privateConstructorUsedError;
   Offer get offer => throw _privateConstructorUsedError;
   OrderStatus get status => throw _privateConstructorUsedError;
@@ -60,7 +63,11 @@ abstract class $OrderCopyWith<$Res> {
   factory $OrderCopyWith(Order value, $Res Function(Order) then) =
       _$OrderCopyWithImpl<$Res>;
   $Res call(
-      {String clientId, Offer offer, OrderStatus status, List<DateTime> days});
+      {String id,
+      String clientId,
+      Offer offer,
+      OrderStatus status,
+      List<DateTime> days});
 
   $OfferCopyWith<$Res> get offer;
 }
@@ -75,12 +82,17 @@ class _$OrderCopyWithImpl<$Res> implements $OrderCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? clientId = freezed,
     Object? offer = freezed,
     Object? status = freezed,
     Object? days = freezed,
   }) {
     return _then(_value.copyWith(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       clientId: clientId == freezed
           ? _value.clientId
           : clientId // ignore: cast_nullable_to_non_nullable
@@ -114,7 +126,11 @@ abstract class _$OrderCopyWith<$Res> implements $OrderCopyWith<$Res> {
       __$OrderCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String clientId, Offer offer, OrderStatus status, List<DateTime> days});
+      {String id,
+      String clientId,
+      Offer offer,
+      OrderStatus status,
+      List<DateTime> days});
 
   @override
   $OfferCopyWith<$Res> get offer;
@@ -131,12 +147,17 @@ class __$OrderCopyWithImpl<$Res> extends _$OrderCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? clientId = freezed,
     Object? offer = freezed,
     Object? status = freezed,
     Object? days = freezed,
   }) {
     return _then(_Order(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       clientId: clientId == freezed
           ? _value.clientId
           : clientId // ignore: cast_nullable_to_non_nullable
@@ -161,7 +182,8 @@ class __$OrderCopyWithImpl<$Res> extends _$OrderCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Order implements _Order {
   const _$_Order(
-      {required this.clientId,
+      {required this.id,
+      required this.clientId,
       required this.offer,
       required this.status,
       required this.days});
@@ -169,6 +191,8 @@ class _$_Order implements _Order {
   factory _$_Order.fromJson(Map<String, dynamic> json) =>
       _$$_OrderFromJson(json);
 
+  @override
+  final String id;
   @override
   final String clientId;
   @override
@@ -180,7 +204,7 @@ class _$_Order implements _Order {
 
   @override
   String toString() {
-    return 'Order(clientId: $clientId, offer: $offer, status: $status, days: $days)';
+    return 'Order(id: $id, clientId: $clientId, offer: $offer, status: $status, days: $days)';
   }
 
   @override
@@ -188,6 +212,7 @@ class _$_Order implements _Order {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Order &&
+            const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.clientId, clientId) &&
             const DeepCollectionEquality().equals(other.offer, offer) &&
             const DeepCollectionEquality().equals(other.status, status) &&
@@ -197,6 +222,7 @@ class _$_Order implements _Order {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(clientId),
       const DeepCollectionEquality().hash(offer),
       const DeepCollectionEquality().hash(status),
@@ -215,13 +241,16 @@ class _$_Order implements _Order {
 
 abstract class _Order implements Order {
   const factory _Order(
-      {required String clientId,
+      {required String id,
+      required String clientId,
       required Offer offer,
       required OrderStatus status,
       required List<DateTime> days}) = _$_Order;
 
   factory _Order.fromJson(Map<String, dynamic> json) = _$_Order.fromJson;
 
+  @override
+  String get id;
   @override
   String get clientId;
   @override

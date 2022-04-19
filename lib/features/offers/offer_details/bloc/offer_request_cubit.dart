@@ -5,6 +5,7 @@ import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/data/offer/order.dart';
 import 'package:petsly/utils/date_time_extension.dart';
+import 'package:uuid/uuid.dart';
 
 class OfferRequestCubit extends Cubit<List<DateTime>> {
   OfferRequestCubit({required this.firestore}) : super([]);
@@ -23,10 +24,13 @@ class OfferRequestCubit extends Cubit<List<DateTime>> {
   }
 
   Future<void> makeRequest(String clientId, Offer offer) async {
+    final id = const Uuid().v4();
+
     firestore
         .addDocument(
       collectionPath: 'orders',
       data: Order(
+        id: id,
         clientId: clientId,
         offer: offer,
         days: state,

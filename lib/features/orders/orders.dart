@@ -1,33 +1,216 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:build_context/build_context.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:petsly/data/firestore.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/data/offer/order.dart';
+import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
+import 'package:petsly/features/orders/bloc/order_list_cubit.dart';
+import 'package:petsly/utils/date_time_extension.dart';
+import 'package:petsly/utils/hook/use_cubit.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class Orders extends StatelessWidget {
+class Orders extends HookWidget {
   const Orders({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: context.read<Firestore>().getCollection('orders').get(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+    final cubit = useCubit(
+      () => OrderListCubit(firestore: context.read())..init(),
+    );
+
+    return BlocBuilder<OrderListCubit, List<Order>>(
+      bloc: cubit,
+      builder: (context, state) {
+        if (state.isEmpty) {
           return const CircularProgressIndicator();
         }
 
-        final orders =
-            snapshot.data!.docs.map((e) => Order.fromJson(e.mappedData)).where(
-                  (e) =>
-                      e.offer.ownerId == FirebaseAuth.instance.currentUser!.uid,
-                );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: ListView.separated(
+            shrinkWrap: true,
+            itemCount: state.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final order = state.elementAt(index);
 
-        return ListView(
-          shrinkWrap: true,
-          children: orders.map((e) => Text(e.status.toString())).toList(),
+              return AnimatedContainer(
+                duration: const Duration(seconds: 300),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                order.offer.title,
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const Text('Status: '),
+                                  Text(
+                                    order.status.text,
+                                    style: TextStyle(
+                                      color: getStatusColor(order.status),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      context.push(
+                                        OfferDetailsScreenRoute(
+                                            offer: order.offer),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Zobacz szczegóły',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(' lub '),
+                                  InkWell(
+                                    onTap: () {
+                                      context.push(
+                                        OfferDetailsScreenRoute(
+                                            offer: order.offer),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Napisz na czacie',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (order.status == OrderStatus.requested)
+                          Column(
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  cubit.updateStatus(
+                                      order, OrderStatus.accepted);
+                                },
+                                child: const Text(
+                                  'Zaakceptuj',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  cubit.updateStatus(
+                                    order,
+                                    OrderStatus.rejected,
+                                  );
+                                },
+                                child: const Text(
+                                  'Odrzuć',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          )
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    _Calendar(selectedDays: order.days),
+                  ],
+                ),
+              );
+            },
+          ),
         );
+      },
+    );
+  }
+
+  Color getStatusColor(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.accepted:
+        return Colors.green;
+      case OrderStatus.requested:
+        return Colors.black;
+      case OrderStatus.rejected:
+        return Colors.red;
+    }
+  }
+}
+
+class _Calendar extends HookWidget {
+  const _Calendar({
+    Key? key,
+    required this.selectedDays,
+  }) : super(key: key);
+
+  final List<DateTime> selectedDays;
+
+  @override
+  Widget build(BuildContext context) {
+    final format = useState(CalendarFormat.month);
+
+    return TableCalendar(
+      headerStyle: HeaderStyle(
+        titleTextStyle: const TextStyle(fontSize: 17, color: Colors.white),
+        formatButtonTextStyle:
+            const TextStyle(fontSize: 14, color: Colors.white),
+        formatButtonDecoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        leftChevronIcon: const Icon(
+          Icons.chevron_left,
+          color: Colors.white,
+        ),
+        rightChevronIcon: const Icon(
+          Icons.chevron_right,
+          color: Colors.white,
+        ),
+      ),
+      locale: 'pl_PL',
+      firstDay: DateTime.utc(2010, 10, 16),
+      lastDay: DateTime.utc(2030, 3, 14),
+      focusedDay: DateTime.now(),
+      calendarFormat: format.value,
+      onFormatChanged: (calendarFormat) => format.value = calendarFormat,
+      availableGestures: AvailableGestures.horizontalSwipe,
+      selectedDayPredicate: (dateTime) {
+        return selectedDays.containsDay(dateTime);
+      },
+      enabledDayPredicate: (dateTime) {
+        return selectedDays.containsDay(dateTime);
+      },
+      availableCalendarFormats: {
+        CalendarFormat.month: 'miesiąc',
+        CalendarFormat.twoWeeks: 'dwa tygodnie',
+        CalendarFormat.week: 'tydzień'
       },
     );
   }

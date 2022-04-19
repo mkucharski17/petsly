@@ -13,7 +13,6 @@ import 'package:petsly/features/offers/offer_details/confirm_request_dialog.dart
 import 'package:petsly/utils/date_time_extension.dart';
 import 'package:petsly/utils/ui/divider.dart';
 import 'package:petsly/utils/ui/utils/widget_extension.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 

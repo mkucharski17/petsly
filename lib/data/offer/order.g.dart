@@ -7,6 +7,7 @@ part of 'order.dart';
 // **************************************************************************
 
 _$_Order _$$_OrderFromJson(Map<String, dynamic> json) => _$_Order(
+      id: json['id'] as String,
       clientId: json['clientId'] as String,
       offer: Offer.fromJson(json['offer'] as Map<String, dynamic>),
       status: $enumDecode(_$OrderStatusEnumMap, json['status']),
@@ -16,6 +17,7 @@ _$_Order _$$_OrderFromJson(Map<String, dynamic> json) => _$_Order(
     );
 
 Map<String, dynamic> _$$_OrderToJson(_$_Order instance) => <String, dynamic>{
+      'id': instance.id,
       'clientId': instance.clientId,
       'offer': instance.offer.toJson(),
       'status': _$OrderStatusEnumMap[instance.status],
