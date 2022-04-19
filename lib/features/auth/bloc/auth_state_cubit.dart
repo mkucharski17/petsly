@@ -53,16 +53,20 @@ class AuthStateCubit extends Cubit<AuthState> {
     required String phone,
     required String name,
   }) {
+    final email = state.whenOrNull(loggedIn: (user) => user.email);
     return firestore
         .getCollection('users')
         .add({
           'id': id,
           'name': name,
           'phone': phone,
+          'email': email,
         })
         .then((value) => _logger.i('User Added'))
         .catchError((error) => _logger.e('Failed to add user: $error'));
   }
+
+  String? get userId => state.mapOrNull<String?>(loggedIn: (user) => userId);
 
   @override
   Future<void> close() async {

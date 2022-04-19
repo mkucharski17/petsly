@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/offers/offers_map.dart';
+import 'package:petsly/features/orders/orders.dart';
 import 'package:petsly/features/profile/profile.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,7 @@ class HomeScreen extends HookWidget {
     } else if (index == 1) {
       return 'Twoje dane';
     } else if (index == 2) {
-      return 'Ulubione osoby';
+      return 'Opieka';
     } else {
       return 'Twoje rozmowy';
     }
@@ -72,13 +73,13 @@ class _BodyChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (index == 0) {
-      return const OffersMap();
+      return const OffersMapBuilder();
     } else if (index == 1) {
       return const UserProfile();
     } else if (index == 2) {
-      return Text('Ulubione osoby');
+      return const Orders();
     } else {
-      return Text('Twoje rozmowy');
+      return const Text('Twoje rozmowy');
     }
   }
 }
@@ -111,8 +112,8 @@ class _BottomBar extends StatelessWidget {
           icon: Icon(Icons.account_circle),
         ),
         const BottomNavigationBarItem(
-          label: 'Ulubione',
-          icon: Icon(Icons.favorite_outlined),
+          label: 'Opieka',
+          icon: Icon(Icons.pets),
         ),
         const BottomNavigationBarItem(
           label: 'Wiadomości',

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/registration_form_cubit.dart';
-import 'package:petsly/ui/ui.dart';
+import 'package:petsly/utils/ui/utils/widget_extension.dart';
 
 class RegistrationPage extends Page<void> {
   const RegistrationPage({LocalKey? key}) : super(key: key);
@@ -123,33 +123,6 @@ class _Form extends HookWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class _DoNotHaveAccount extends StatelessWidget {
-  const _DoNotHaveAccount({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Nie masz konta?',
-          style: TextStyle(fontSize: 14),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: const Text(
-            'Zarejestruj',
-            style: TextStyle(
-              color: Colors.black,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        )
-      ],
     );
   }
 }

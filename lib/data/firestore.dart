@@ -30,8 +30,15 @@ class Firestore {
     return getCollection(collectionPath).doc(docId).update(data);
   }
 
+  Future<void> addDocument({
+    required String collectionPath,
+    required Map<String, dynamic> data,
+  }) async {
+    await getCollection(collectionPath).add(data);
+  }
+
   CollectionReference getCollection(String path) {
-    return _firestore.collection('users');
+    return _firestore.collection(path);
   }
 }
 

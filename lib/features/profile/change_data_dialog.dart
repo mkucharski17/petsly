@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:petsly/ui/ui.dart';
+import 'package:petsly/utils/ui/utils/utils.dart';
 
 typedef Validator = String? Function(String?);
 

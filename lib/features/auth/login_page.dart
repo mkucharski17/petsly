@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/login_form_cubit.dart';
 import 'package:petsly/features/auth/registration_page.dart';
-import 'package:petsly/ui/ui.dart';
+import 'package:petsly/utils/ui/ui.dart';
 
 class LoginPage extends Page<void> {
   const LoginPage({LocalKey? key}) : super(key: key);
@@ -133,7 +133,7 @@ class _DoNotHaveAccount extends StatelessWidget {
               decoration: TextDecoration.underline,
             ),
           ),
-        )
+        ),
       ],
     );
   }
