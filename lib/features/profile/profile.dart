@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/profile/change_data_dialog.dart';
-import 'package:petsly/features/profile/delete_account_dialog.dart';
 import 'package:petsly/utils/ui/divider.dart';
 import 'package:petsly/utils/ui/utils/utils.dart';
 import 'package:petsly/utils/validator/name_valdiator.dart';
@@ -68,25 +67,6 @@ class _Body extends HookWidget {
       shrinkWrap: true,
       children: [
         const SizedBox(height: 8),
-        InkWell(
-          onTap: () async {
-            final deleteAccount = await DeleteAccountDialog.show(context);
-
-            if (deleteAccount ?? false) {
-              context.read<AuthStateCubit>().deleteUser(userDoc.id);
-            }
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Icon(
-                Icons.close,
-                color: Colors.red,
-              ),
-              const Text('Usuń konto')
-            ],
-          ).columnPadded24,
-        ),
         const SizedBox(height: 36),
         _Image(
           photoUrl: photoUrl,

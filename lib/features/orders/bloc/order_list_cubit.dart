@@ -20,6 +20,7 @@ class OrderListCubit extends Cubit<List<Order>> {
           (e) => e.offer.ownerId == FirebaseAuth.instance.currentUser!.uid,
         )
         .toList();
+    emit(orders);
   }
 
   Future<void> updateStatus(Order order, OrderStatus status) async {

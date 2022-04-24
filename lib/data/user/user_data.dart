@@ -11,7 +11,7 @@ class UserData with _$UserData {
     required String email,
     required String? description,
     required String? phone,
-    required String? photo,
+    required String? photoUrl,
   }) = _UserData;
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

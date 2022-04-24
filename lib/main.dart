@@ -7,6 +7,7 @@ import 'package:petsly/data/firestore.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/auth/bloc/registration_form_cubit.dart';
 import 'package:petsly/features/auth/init_page.dart';
+import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/location/location_service.dart';
 import 'package:petsly/features/location/location_source.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +73,11 @@ class _GlobalProviders extends StatelessWidget {
             lazy: false,
             create: (context) => AuthStateCubit(
               registrationFormCubit: context.read(),
+              firestore: context.read(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ConversationListCubit(
               firestore: context.read(),
             ),
           ),

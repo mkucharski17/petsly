@@ -66,7 +66,7 @@ class AuthStateCubit extends Cubit<AuthState> {
         .catchError((error) => _logger.e('Failed to add user: $error'));
   }
 
-  String? get userId => state.mapOrNull<String?>(loggedIn: (user) => userId);
+  String? get userId => FirebaseAuth.instance.currentUser?.uid;
 
   @override
   Future<void> close() async {

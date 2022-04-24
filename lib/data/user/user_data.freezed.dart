@@ -28,14 +28,14 @@ class _$UserDataTearOff {
       required String email,
       required String? description,
       required String? phone,
-      required String? photo}) {
+      required String? photoUrl}) {
     return _UserData(
       id: id,
       name: name,
       email: email,
       description: description,
       phone: phone,
-      photo: photo,
+      photoUrl: photoUrl,
     );
   }
 
@@ -54,7 +54,7 @@ mixin _$UserData {
   String get email => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
-  String? get photo => throw _privateConstructorUsedError;
+  String? get photoUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -72,7 +72,7 @@ abstract class $UserDataCopyWith<$Res> {
       String email,
       String? description,
       String? phone,
-      String? photo});
+      String? photoUrl});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
     Object? email = freezed,
     Object? description = freezed,
     Object? phone = freezed,
-    Object? photo = freezed,
+    Object? photoUrl = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -113,9 +113,9 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String?,
-      photo: photo == freezed
-          ? _value.photo
-          : photo // ignore: cast_nullable_to_non_nullable
+      photoUrl: photoUrl == freezed
+          ? _value.photoUrl
+          : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -132,7 +132,7 @@ abstract class _$UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res> {
       String email,
       String? description,
       String? phone,
-      String? photo});
+      String? photoUrl});
 }
 
 /// @nodoc
@@ -151,7 +151,7 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
     Object? email = freezed,
     Object? description = freezed,
     Object? phone = freezed,
-    Object? photo = freezed,
+    Object? photoUrl = freezed,
   }) {
     return _then(_UserData(
       id: id == freezed
@@ -174,9 +174,9 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as String?,
-      photo: photo == freezed
-          ? _value.photo
-          : photo // ignore: cast_nullable_to_non_nullable
+      photoUrl: photoUrl == freezed
+          ? _value.photoUrl
+          : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -191,7 +191,7 @@ class _$_UserData implements _UserData {
       required this.email,
       required this.description,
       required this.phone,
-      required this.photo});
+      required this.photoUrl});
 
   factory _$_UserData.fromJson(Map<String, dynamic> json) =>
       _$$_UserDataFromJson(json);
@@ -207,11 +207,11 @@ class _$_UserData implements _UserData {
   @override
   final String? phone;
   @override
-  final String? photo;
+  final String? photoUrl;
 
   @override
   String toString() {
-    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photo: $photo)';
+    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photoUrl: $photoUrl)';
   }
 
   @override
@@ -225,7 +225,7 @@ class _$_UserData implements _UserData {
             const DeepCollectionEquality()
                 .equals(other.description, description) &&
             const DeepCollectionEquality().equals(other.phone, phone) &&
-            const DeepCollectionEquality().equals(other.photo, photo));
+            const DeepCollectionEquality().equals(other.photoUrl, photoUrl));
   }
 
   @override
@@ -236,7 +236,7 @@ class _$_UserData implements _UserData {
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(description),
       const DeepCollectionEquality().hash(phone),
-      const DeepCollectionEquality().hash(photo));
+      const DeepCollectionEquality().hash(photoUrl));
 
   @JsonKey(ignore: true)
   @override
@@ -256,7 +256,7 @@ abstract class _UserData implements UserData {
       required String email,
       required String? description,
       required String? phone,
-      required String? photo}) = _$_UserData;
+      required String? photoUrl}) = _$_UserData;
 
   factory _UserData.fromJson(Map<String, dynamic> json) = _$_UserData.fromJson;
 
@@ -271,7 +271,7 @@ abstract class _UserData implements UserData {
   @override
   String? get phone;
   @override
-  String? get photo;
+  String? get photoUrl;
   @override
   @JsonKey(ignore: true)
   _$UserDataCopyWith<_UserData> get copyWith =>

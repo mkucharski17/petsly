@@ -5,9 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:petsly/data/chat/conversation.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/data/user/user_data.dart';
+import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/chat/conversation_details_page.dart';
 import 'package:petsly/features/offers/offer_details/bloc/offer_request_cubit.dart';
 import 'package:petsly/features/offers/offer_details/confirm_request_dialog.dart';
 import 'package:petsly/utils/date_time_extension.dart';
@@ -66,7 +69,7 @@ class OfferDetailsScreen extends StatelessWidget {
                   child: const CircularProgressIndicator(),
                 );
               }
-              final userData = UserData.fromJson(snapshot.data!.mappedData);
+              final offerOwner = UserData.fromJson(snapshot.data!.mappedData);
 
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24),
@@ -83,18 +86,18 @@ class OfferDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              userData.name,
+                              offerOwner.name,
                               style: const TextStyle(fontSize: 18),
                             ),
                             const SizedBox(width: 12),
-                            _OwnerPhoto(photoUrl: userData.photo)
+                            _OwnerPhoto(photoUrl: offerOwner.photoUrl)
                           ],
                         ),
                       ],
                     ),
-                    if (userData.description != null)
+                    if (offerOwner.description != null)
                       Text(
-                        userData.description!,
+                        offerOwner.description!,
                         style: const TextStyle(fontSize: 14),
                       ),
                     const SizedBox(
@@ -102,12 +105,12 @@ class OfferDetailsScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text('Telefon: ${userData.phone}'),
+                        Text('Telefon: ${offerOwner.phone}'),
                         const SizedBox(width: 16),
                         IconButton(
                           iconSize: 20,
                           onPressed: () {
-                            launch('tel:+48 ${userData.phone}');
+                            launch('tel:+48 ${offerOwner.phone}');
                           },
                           icon: const Icon(
                             Icons.call,
@@ -118,16 +121,57 @@ class OfferDetailsScreen extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Text('E-mail: ${userData.email}'),
+                        Text('E-mail: ${offerOwner.email}'),
                         const SizedBox(width: 16),
                         IconButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            launch('mailto:${userData.email}');
+                            launch('mailto:${offerOwner.email}');
                           },
                           iconSize: 20,
                           icon: const Icon(
                             Icons.email,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('Napisz na czacie'),
+                        const SizedBox(width: 16),
+                        IconButton(
+                          iconSize: 20,
+                          onPressed: () async {
+                            final currentUserData = await context
+                                .read<Firestore>()
+                                .getDocument(
+                                  collectionPath: 'users',
+                                  snapshotQuery: (snapshot) {
+                                    return snapshot.mappedData['id'] ==
+                                        context.read<AuthStateCubit>().userId;
+                                  },
+                                );
+                            final user = UserData.fromJson(currentUserData!
+                                .data() as Map<String, dynamic>);
+
+                            Navigator.of(context).push(
+                              ConversationDetailsScreenRoute(
+                                currentUser: ConversationParticipant(
+                                  id: user.id,
+                                  name: user.name,
+                                  photoUrl: user.photoUrl,
+                                ),
+                                otherUser: ConversationParticipant(
+                                  id: offerOwner.id,
+                                  name: offerOwner.name,
+                                  photoUrl: offerOwner.photoUrl,
+                                ),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.message,
                             color: Colors.blue,
                           ),
                         ),

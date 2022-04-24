@@ -2,7 +2,12 @@ import 'package:build_context/build_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:petsly/data/chat/conversation.dart';
+import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/order.dart';
+import 'package:petsly/data/user/user_data.dart';
+import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/chat/conversation_details_page.dart';
 import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
 import 'package:petsly/features/orders/bloc/order_list_cubit.dart';
 import 'package:petsly/utils/date_time_extension.dart';
@@ -75,11 +80,12 @@ class Orders extends HookWidget {
                                     onTap: () {
                                       context.push(
                                         OfferDetailsScreenRoute(
-                                            offer: order.offer),
+                                          offer: order.offer,
+                                        ),
                                       );
                                     },
                                     child: const Text(
-                                      'Zobacz szczegóły',
+                                      'Zobacz oferte',
                                       style: TextStyle(
                                         color: Colors.black,
                                         decoration: TextDecoration.underline,
@@ -88,10 +94,50 @@ class Orders extends HookWidget {
                                   ),
                                   const Text(' lub '),
                                   InkWell(
-                                    onTap: () {
-                                      context.push(
-                                        OfferDetailsScreenRoute(
-                                            offer: order.offer),
+                                    onTap: () async {
+                                      final currentUserData = await context
+                                          .read<Firestore>()
+                                          .getDocument(
+                                            collectionPath: 'users',
+                                            snapshotQuery: (snapshot) {
+                                              return snapshot
+                                                      .mappedData['id'] ==
+                                                  context
+                                                      .read<AuthStateCubit>()
+                                                      .userId;
+                                            },
+                                          );
+                                      final user = UserData.fromJson(
+                                          currentUserData!.data()
+                                              as Map<String, dynamic>);
+
+                                      final otherUserData = await context
+                                          .read<Firestore>()
+                                          .getDocument(
+                                            collectionPath: 'users',
+                                            snapshotQuery: (snapshot) {
+                                              return snapshot
+                                                      .mappedData['id'] ==
+                                                  order.clientId;
+                                            },
+                                          );
+                                      final otherUser = UserData.fromJson(
+                                          otherUserData!.data()
+                                              as Map<String, dynamic>);
+
+                                      Navigator.of(context).push(
+                                        ConversationDetailsScreenRoute(
+                                          currentUser: ConversationParticipant(
+                                            id: user.id,
+                                            name: user.name,
+                                            photoUrl: user.photoUrl,
+                                          ),
+                                          otherUser: ConversationParticipant(
+                                            id: otherUser.id,
+                                            name: otherUser.name,
+                                            photoUrl: otherUser.photoUrl,
+                                          ),
+                                        ),
                                       );
                                     },
                                     child: const Text(
@@ -113,7 +159,9 @@ class Orders extends HookWidget {
                               TextButton(
                                 onPressed: () {
                                   cubit.updateStatus(
-                                      order, OrderStatus.accepted);
+                                    order,
+                                    OrderStatus.accepted,
+                                  );
                                 },
                                 child: const Text(
                                   'Zaakceptuj',

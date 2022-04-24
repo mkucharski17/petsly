@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
+import 'package:petsly/features/chat/conversation_list.dart';
 import 'package:petsly/features/offers/offers_map.dart';
 import 'package:petsly/features/orders/orders.dart';
 import 'package:petsly/features/profile/profile.dart';
@@ -79,7 +83,7 @@ class _BodyChild extends StatelessWidget {
     } else if (index == 2) {
       return const Orders();
     } else {
-      return const Text('Twoje rozmowy');
+      return const ConversationList();
     }
   }
 }
@@ -115,9 +119,38 @@ class _BottomBar extends StatelessWidget {
           label: 'Opieka',
           icon: Icon(Icons.pets),
         ),
-        const BottomNavigationBarItem(
+        BottomNavigationBarItem(
           label: 'Wiadomości',
-          icon: Icon(Icons.chat_bubble),
+          icon: BlocBuilder<ConversationListCubit, ConversationListState>(
+            builder: (context, state) {
+              final userId = FirebaseAuth.instance.currentUser!.uid;
+
+              return Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.chat_bubble),
+                  if (state.conversationList.any((element) {
+                    final lastMessage = element.data().messages.last;
+                    return !lastMessage.isRead &&
+                        lastMessage.senderId != userId;
+                  }))
+                    Positioned(
+                      top: -4,
+                      right: -4,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
         ),
       ],
     );
