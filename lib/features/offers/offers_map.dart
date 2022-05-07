@@ -21,7 +21,7 @@ class OffersMapBuilder extends StatelessWidget {
       future: context.read<Firestore>().getCollection('offers').get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
         final offers =
@@ -87,8 +87,9 @@ class _OffersMap extends HookWidget {
               ),
             ],
           );
-        } else
+        } else {
           return const Center(child: CircularProgressIndicator());
+        }
       },
     );
   }

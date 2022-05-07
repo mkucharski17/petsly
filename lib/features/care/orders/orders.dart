@@ -7,9 +7,9 @@ import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/order.dart';
 import 'package:petsly/data/user/user_data.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/care/orders/bloc/order_list_cubit.dart';
 import 'package:petsly/features/chat/conversation_details_page.dart';
 import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
-import 'package:petsly/features/orders/bloc/order_list_cubit.dart';
 import 'package:petsly/utils/date_time_extension.dart';
 import 'package:petsly/utils/hook/use_cubit.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -27,7 +27,7 @@ class Orders extends HookWidget {
       bloc: cubit,
       builder: (context, state) {
         if (state.isEmpty) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
         return Padding(

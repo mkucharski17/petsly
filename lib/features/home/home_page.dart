@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
+import 'package:petsly/features/care/care_tab.dart';
 import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/chat/conversation_list.dart';
 import 'package:petsly/features/offers/offers_map.dart';
-import 'package:petsly/features/orders/orders.dart';
 import 'package:petsly/features/profile/profile.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends Page<void> {
   const HomePage({LocalKey? key}) : super(key: key);
@@ -81,7 +80,7 @@ class _BodyChild extends StatelessWidget {
     } else if (index == 1) {
       return const UserProfile();
     } else if (index == 2) {
-      return const Orders();
+      return const CareTab();
     } else {
       return const ConversationList();
     }
