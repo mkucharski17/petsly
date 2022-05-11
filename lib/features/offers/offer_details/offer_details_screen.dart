@@ -222,12 +222,6 @@ class _Calendar extends HookWidget {
   }) : super(key: key);
 
   final Offer offer;
-  final availableDays = [
-    DateTime(2022, 04, 19),
-    DateTime(2022, 04, 20),
-    DateTime(2022, 04, 21),
-    DateTime(2022, 04, 25),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +306,7 @@ class _Calendar extends HookWidget {
             enabledDayPredicate: (dateTime) {
               final today = DateTime.now();
               return dateTime.isAfter(today) &&
-                  availableDays.containsDay(dateTime);
+                  offer.availableDays.containsDay(dateTime);
             },
             calendarFormat: format.value,
             onFormatChanged: (calendarFormat) => format.value = calendarFormat,

@@ -23,21 +23,25 @@ class Orders extends HookWidget {
       () => OrderListCubit(firestore: context.read())..init(),
     );
 
-    return BlocBuilder<OrderListCubit, List<Order>>(
+    return BlocBuilder<OrderListCubit, OrderListState>(
       bloc: cubit,
       builder: (context, state) {
-        if (state.isEmpty) {
+        if (state.loading) {
           return const Center(child: CircularProgressIndicator());
+        } else if (state.orderList.isEmpty) {
+          return const Center(
+            child: Text('Nie masz jeszcze zamówień'),
+          );
         }
 
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: ListView.separated(
             shrinkWrap: true,
-            itemCount: state.length,
+            itemCount: state.orderList.length,
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
-              final order = state.elementAt(index);
+              final order = state.orderList.elementAt(index);
 
               return AnimatedContainer(
                 duration: const Duration(seconds: 300),

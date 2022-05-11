@@ -3,15 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/order.dart';
 
-class OrderListCubit extends Cubit<List<Order>> {
-  OrderListCubit({required this.firestore}) : super([]);
+part 'order_list_cubit.freezed.dart';
+
+class OrderListCubit extends Cubit<OrderListState> {
+  OrderListCubit({required this.firestore}) : super(const OrderListState());
 
   final Firestore firestore;
 
   Future<void> init() async {
+    emit(state.copyWith(loading: true));
     final snapshot = await firestore.getCollection('orders').get();
 
     final orders = snapshot.docs
@@ -20,11 +24,11 @@ class OrderListCubit extends Cubit<List<Order>> {
           (e) => e.offer.ownerId == FirebaseAuth.instance.currentUser!.uid,
         )
         .toList();
-    emit(orders);
+    emit(state.copyWith(orderList: orders, loading: false));
   }
 
   Future<void> updateStatus(Order order, OrderStatus status) async {
-    final orders = state;
+    final orders = state.orderList;
     final indexToChange =
         orders.indexWhere((element) => element.id == order.id);
 
@@ -38,11 +42,11 @@ class OrderListCubit extends Cubit<List<Order>> {
       firestore
           .updateDocument(
         collectionPath: 'orders',
-        docId: docToUpdate.id,
-        data: order.toJson(),
+        docId: docToUpdate.reference.id,
+        data: orders[indexToChange].toJson(),
       )
           .then((value) {
-        emit([...orders]);
+        emit(state.copyWith(orderList: [...orders]));
 
         Fluttertoast.showToast(
           msg: 'Status zaktualizowany',
@@ -58,4 +62,12 @@ class OrderListCubit extends Cubit<List<Order>> {
       });
     }
   }
+}
+
+@freezed
+class OrderListState with _$OrderListState {
+  const factory OrderListState({
+    @Default([]) List<Order> orderList,
+    @Default(false) bool loading,
+  }) = _OrderListState;
 }

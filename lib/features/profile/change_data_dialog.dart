@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:petsly/utils/ui/utils/utils.dart';
 
@@ -10,11 +11,13 @@ class ChangeDataDialog extends HookWidget {
     required this.initialText,
     required this.validator,
     this.maxLines = 1,
+    this.inputType,
   }) : super(key: key);
 
   final String initialText;
   final Validator validator;
   final int? maxLines;
+  final TextInputType? inputType;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class ChangeDataDialog extends HookWidget {
             TextFormField(
               controller: controller,
               maxLines: maxLines,
+              keyboardType: inputType,
             ).columnPadded24,
             const SizedBox(height: 12),
             Text(
@@ -82,6 +86,7 @@ class ChangeDataDialog extends HookWidget {
     required String initialText,
     required Validator validator,
     required int? maxLines,
+    TextInputType? inputType,
   }) =>
       showDialog<String>(
         context: context,
@@ -89,6 +94,7 @@ class ChangeDataDialog extends HookWidget {
           initialText: initialText,
           validator: validator,
           maxLines: maxLines,
+          inputType: inputType,
         ),
       );
 }

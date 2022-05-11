@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petsly/data/firestore.dart';
@@ -85,6 +86,7 @@ class _Body extends HookWidget {
           docId: userDoc.id,
           title: 'Telefon',
           value: phone,
+          inputType: TextInputType.number,
           validator: (phone) {
             return PhoneValidator.isValid(phone)
                 ? null
@@ -248,6 +250,7 @@ class _DataSection extends HookWidget {
     required this.validator,
     required this.docId,
     this.maxLines,
+    this.inputType,
   }) : super(key: key);
 
   final String title;
@@ -256,6 +259,7 @@ class _DataSection extends HookWidget {
   final Validator validator;
   final String docId;
   final int? maxLines;
+  final TextInputType? inputType;
 
   @override
   Widget build(BuildContext context) {
@@ -299,6 +303,7 @@ class _DataSection extends HookWidget {
                         initialText: value,
                         validator: validator,
                         maxLines: maxLines,
+                        inputType: inputType,
                       );
 
                       if (changedText != null && changedText != value) {

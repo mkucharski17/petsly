@@ -17,6 +17,23 @@ class YourOffers extends StatelessWidget {
           builder: (context, state) {
             if (state.loading) {
               return const Center(child: CircularProgressIndicator());
+            } else if (state.yourOfferList.isEmpty) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Nie masz jeszcze ofert'),
+                  const SizedBox(height: 16),
+                  IconButton(
+                    iconSize: 36,
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.add_circle_rounded,
+                      size: 36,
+                      color: Colors.blue,
+                    ),
+                  )
+                ],
+              );
             }
 
             return ListView.separated(
