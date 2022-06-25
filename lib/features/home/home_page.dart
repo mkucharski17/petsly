@@ -6,7 +6,7 @@ import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/care/care_tab.dart';
 import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/chat/conversation_list.dart';
-import 'package:petsly/features/offers/offers_map.dart';
+import 'package:petsly/features/offers/offer_list.dart';
 import 'package:petsly/features/profile/profile.dart';
 
 class HomePage extends Page<void> {
@@ -76,7 +76,7 @@ class _BodyChild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (index == 0) {
-      return const OffersMapBuilder();
+      return const OfferListBuilder();
     } else if (index == 1) {
       return const UserProfile();
     } else if (index == 2) {
@@ -129,8 +129,9 @@ class _BottomBar extends StatelessWidget {
                 clipBehavior: Clip.none,
                 children: [
                   const Icon(Icons.chat_bubble),
-                  if (state.conversationList.any((element) {
-                    final lastMessage = element.data().messages.last;
+                  if (state.conversations.any((element) {
+                    final lastMessage =
+                        element.conversation.data().messages.last;
                     return !lastMessage.isRead &&
                         lastMessage.senderId != userId;
                   }))

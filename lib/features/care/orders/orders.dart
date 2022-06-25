@@ -2,7 +2,6 @@ import 'package:build_context/build_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:petsly/data/chat/conversation.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/order.dart';
 import 'package:petsly/data/user/user_data.dart';
@@ -131,16 +130,8 @@ class Orders extends HookWidget {
 
                                       Navigator.of(context).push(
                                         ConversationDetailsScreenRoute(
-                                          currentUser: ConversationParticipant(
-                                            id: user.id,
-                                            name: user.name,
-                                            photoUrl: user.photoUrl,
-                                          ),
-                                          otherUser: ConversationParticipant(
-                                            id: otherUser.id,
-                                            name: otherUser.name,
-                                            photoUrl: otherUser.photoUrl,
-                                          ),
+                                          currentUserId: user.id,
+                                          otherUser: otherUser,
                                         ),
                                       );
                                     },

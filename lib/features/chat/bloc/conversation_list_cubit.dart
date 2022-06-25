@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:petsly/data/chat/conversation.dart';
 import 'package:petsly/data/firestore.dart';
+import 'package:petsly/data/user/user_data.dart';
 
 part 'conversation_list_cubit.freezed.dart';
 
 class ConversationListCubit extends Cubit<ConversationListState> {
-  ConversationListCubit({required Firestore firestore})
+  ConversationListCubit({required this.firestore})
       : super(const ConversationListState()) {
     conversationSubscription = firestore
         .getCollection('conversations')
@@ -20,32 +21,65 @@ class ConversationListCubit extends Cubit<ConversationListState> {
             toFirestore: (conversation, _) => conversation.toJson())
         .snapshots()
         .listen(_onMessage);
+    // Future.delayed(const Duration(seconds: 2), () {
+    //   emit(state.copyWith(loading: false));
+    // });
   }
 
   late final StreamSubscription conversationSubscription;
 
-  void _onMessage(QuerySnapshot<Conversation> snapshot) {
+  final Firestore firestore;
+
+  Future<void> _onMessage(QuerySnapshot<Conversation> snapshot) async {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
     final conversations = snapshot.docs.where((element) {
-      final firstUser = element.data().firstUser;
-      final secondUser = element.data().secondUser;
+      final firstUserId = element.data().firstUserId;
+      final secondUserId = element.data().secondUserId;
 
-      return firstUser.id == currentUserId || secondUser.id == currentUserId;
+      return firstUserId == currentUserId || secondUserId == currentUserId;
     }).toList();
 
+    conversations
+      ..sort(
+        (a, b) {
+          return b
+              .data()
+              .messages
+              .last
+              .dateTime
+              .compareTo(a.data().messages.last.dateTime);
+        },
+      );
+
+    final otherUserIds = conversations.map(
+      (e) => e.data().secondUserId == currentUserId
+          ? e.data().firstUserId
+          : e.data().secondUserId,
+    );
+
+    final otherUsers = await firestore
+        .getCollection('users')
+        .withConverter<UserData>(
+          fromFirestore: (snapshot, _) => UserData.fromJson(snapshot.data()!),
+          toFirestore: (userData, _) => userData.toJson(),
+        )
+        .get()
+      ..docs.where((element) => otherUserIds.contains(element.data().id));
+
     emit(state.copyWith(
-      conversationList: conversations
-        ..sort(
-          (a, b) {
-            return b
-                .data()
-                .messages
-                .last
-                .dateTime
-                .compareTo(a.data().messages.last.dateTime);
-          },
-        ),
+      conversations: conversations
+          .map(
+            (conv) => ConversationPreviewData(
+              otherUserData: otherUsers.docs
+                  .firstWhere((usr) =>
+                      usr.data().id == conv.data().firstUserId ||
+                      usr.data().id == conv.data().secondUserId)
+                  .data(),
+              conversation: conv,
+            ),
+          )
+          .toList(),
       loading: false,
     ));
   }
@@ -55,6 +89,6 @@ class ConversationListCubit extends Cubit<ConversationListState> {
 class ConversationListState with _$ConversationListState {
   const factory ConversationListState({
     @Default(true) bool loading,
-    @Default([]) List<QueryDocumentSnapshot<Conversation>> conversationList,
+    @Default([]) List<ConversationPreviewData> conversations,
   }) = _ConversationListState;
 }

@@ -14,6 +14,181 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+/// @nodoc
+class _$ConversationPreviewDataTearOff {
+  const _$ConversationPreviewDataTearOff();
+
+  _ConversationPreviewData call(
+      {required UserData otherUserData,
+      required QueryDocumentSnapshot<Conversation> conversation}) {
+    return _ConversationPreviewData(
+      otherUserData: otherUserData,
+      conversation: conversation,
+    );
+  }
+}
+
+/// @nodoc
+const $ConversationPreviewData = _$ConversationPreviewDataTearOff();
+
+/// @nodoc
+mixin _$ConversationPreviewData {
+  UserData get otherUserData => throw _privateConstructorUsedError;
+  QueryDocumentSnapshot<Conversation> get conversation =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ConversationPreviewDataCopyWith<ConversationPreviewData> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ConversationPreviewDataCopyWith<$Res> {
+  factory $ConversationPreviewDataCopyWith(ConversationPreviewData value,
+          $Res Function(ConversationPreviewData) then) =
+      _$ConversationPreviewDataCopyWithImpl<$Res>;
+  $Res call(
+      {UserData otherUserData,
+      QueryDocumentSnapshot<Conversation> conversation});
+
+  $UserDataCopyWith<$Res> get otherUserData;
+}
+
+/// @nodoc
+class _$ConversationPreviewDataCopyWithImpl<$Res>
+    implements $ConversationPreviewDataCopyWith<$Res> {
+  _$ConversationPreviewDataCopyWithImpl(this._value, this._then);
+
+  final ConversationPreviewData _value;
+  // ignore: unused_field
+  final $Res Function(ConversationPreviewData) _then;
+
+  @override
+  $Res call({
+    Object? otherUserData = freezed,
+    Object? conversation = freezed,
+  }) {
+    return _then(_value.copyWith(
+      otherUserData: otherUserData == freezed
+          ? _value.otherUserData
+          : otherUserData // ignore: cast_nullable_to_non_nullable
+              as UserData,
+      conversation: conversation == freezed
+          ? _value.conversation
+          : conversation // ignore: cast_nullable_to_non_nullable
+              as QueryDocumentSnapshot<Conversation>,
+    ));
+  }
+
+  @override
+  $UserDataCopyWith<$Res> get otherUserData {
+    return $UserDataCopyWith<$Res>(_value.otherUserData, (value) {
+      return _then(_value.copyWith(otherUserData: value));
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$ConversationPreviewDataCopyWith<$Res>
+    implements $ConversationPreviewDataCopyWith<$Res> {
+  factory _$ConversationPreviewDataCopyWith(_ConversationPreviewData value,
+          $Res Function(_ConversationPreviewData) then) =
+      __$ConversationPreviewDataCopyWithImpl<$Res>;
+  @override
+  $Res call(
+      {UserData otherUserData,
+      QueryDocumentSnapshot<Conversation> conversation});
+
+  @override
+  $UserDataCopyWith<$Res> get otherUserData;
+}
+
+/// @nodoc
+class __$ConversationPreviewDataCopyWithImpl<$Res>
+    extends _$ConversationPreviewDataCopyWithImpl<$Res>
+    implements _$ConversationPreviewDataCopyWith<$Res> {
+  __$ConversationPreviewDataCopyWithImpl(_ConversationPreviewData _value,
+      $Res Function(_ConversationPreviewData) _then)
+      : super(_value, (v) => _then(v as _ConversationPreviewData));
+
+  @override
+  _ConversationPreviewData get _value =>
+      super._value as _ConversationPreviewData;
+
+  @override
+  $Res call({
+    Object? otherUserData = freezed,
+    Object? conversation = freezed,
+  }) {
+    return _then(_ConversationPreviewData(
+      otherUserData: otherUserData == freezed
+          ? _value.otherUserData
+          : otherUserData // ignore: cast_nullable_to_non_nullable
+              as UserData,
+      conversation: conversation == freezed
+          ? _value.conversation
+          : conversation // ignore: cast_nullable_to_non_nullable
+              as QueryDocumentSnapshot<Conversation>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_ConversationPreviewData implements _ConversationPreviewData {
+  const _$_ConversationPreviewData(
+      {required this.otherUserData, required this.conversation});
+
+  @override
+  final UserData otherUserData;
+  @override
+  final QueryDocumentSnapshot<Conversation> conversation;
+
+  @override
+  String toString() {
+    return 'ConversationPreviewData(otherUserData: $otherUserData, conversation: $conversation)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ConversationPreviewData &&
+            const DeepCollectionEquality()
+                .equals(other.otherUserData, otherUserData) &&
+            const DeepCollectionEquality()
+                .equals(other.conversation, conversation));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(otherUserData),
+      const DeepCollectionEquality().hash(conversation));
+
+  @JsonKey(ignore: true)
+  @override
+  _$ConversationPreviewDataCopyWith<_ConversationPreviewData> get copyWith =>
+      __$ConversationPreviewDataCopyWithImpl<_ConversationPreviewData>(
+          this, _$identity);
+}
+
+abstract class _ConversationPreviewData implements ConversationPreviewData {
+  const factory _ConversationPreviewData(
+          {required UserData otherUserData,
+          required QueryDocumentSnapshot<Conversation> conversation}) =
+      _$_ConversationPreviewData;
+
+  @override
+  UserData get otherUserData;
+  @override
+  QueryDocumentSnapshot<Conversation> get conversation;
+  @override
+  @JsonKey(ignore: true)
+  _$ConversationPreviewDataCopyWith<_ConversationPreviewData> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 Conversation _$ConversationFromJson(Map<String, dynamic> json) {
   return _Conversation.fromJson(json);
 }
@@ -23,12 +198,12 @@ class _$ConversationTearOff {
   const _$ConversationTearOff();
 
   _Conversation call(
-      {required ConversationParticipant firstUser,
-      required ConversationParticipant secondUser,
+      {required String firstUserId,
+      required String secondUserId,
       required List<Message> messages}) {
     return _Conversation(
-      firstUser: firstUser,
-      secondUser: secondUser,
+      firstUserId: firstUserId,
+      secondUserId: secondUserId,
       messages: messages,
     );
   }
@@ -43,8 +218,8 @@ const $Conversation = _$ConversationTearOff();
 
 /// @nodoc
 mixin _$Conversation {
-  ConversationParticipant get firstUser => throw _privateConstructorUsedError;
-  ConversationParticipant get secondUser => throw _privateConstructorUsedError;
+  String get firstUserId => throw _privateConstructorUsedError;
+  String get secondUserId => throw _privateConstructorUsedError;
   List<Message> get messages => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,13 +233,7 @@ abstract class $ConversationCopyWith<$Res> {
   factory $ConversationCopyWith(
           Conversation value, $Res Function(Conversation) then) =
       _$ConversationCopyWithImpl<$Res>;
-  $Res call(
-      {ConversationParticipant firstUser,
-      ConversationParticipant secondUser,
-      List<Message> messages});
-
-  $ConversationParticipantCopyWith<$Res> get firstUser;
-  $ConversationParticipantCopyWith<$Res> get secondUser;
+  $Res call({String firstUserId, String secondUserId, List<Message> messages});
 }
 
 /// @nodoc
@@ -77,38 +246,24 @@ class _$ConversationCopyWithImpl<$Res> implements $ConversationCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? firstUser = freezed,
-    Object? secondUser = freezed,
+    Object? firstUserId = freezed,
+    Object? secondUserId = freezed,
     Object? messages = freezed,
   }) {
     return _then(_value.copyWith(
-      firstUser: firstUser == freezed
-          ? _value.firstUser
-          : firstUser // ignore: cast_nullable_to_non_nullable
-              as ConversationParticipant,
-      secondUser: secondUser == freezed
-          ? _value.secondUser
-          : secondUser // ignore: cast_nullable_to_non_nullable
-              as ConversationParticipant,
+      firstUserId: firstUserId == freezed
+          ? _value.firstUserId
+          : firstUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondUserId: secondUserId == freezed
+          ? _value.secondUserId
+          : secondUserId // ignore: cast_nullable_to_non_nullable
+              as String,
       messages: messages == freezed
           ? _value.messages
           : messages // ignore: cast_nullable_to_non_nullable
               as List<Message>,
     ));
-  }
-
-  @override
-  $ConversationParticipantCopyWith<$Res> get firstUser {
-    return $ConversationParticipantCopyWith<$Res>(_value.firstUser, (value) {
-      return _then(_value.copyWith(firstUser: value));
-    });
-  }
-
-  @override
-  $ConversationParticipantCopyWith<$Res> get secondUser {
-    return $ConversationParticipantCopyWith<$Res>(_value.secondUser, (value) {
-      return _then(_value.copyWith(secondUser: value));
-    });
   }
 }
 
@@ -119,15 +274,7 @@ abstract class _$ConversationCopyWith<$Res>
           _Conversation value, $Res Function(_Conversation) then) =
       __$ConversationCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {ConversationParticipant firstUser,
-      ConversationParticipant secondUser,
-      List<Message> messages});
-
-  @override
-  $ConversationParticipantCopyWith<$Res> get firstUser;
-  @override
-  $ConversationParticipantCopyWith<$Res> get secondUser;
+  $Res call({String firstUserId, String secondUserId, List<Message> messages});
 }
 
 /// @nodoc
@@ -142,19 +289,19 @@ class __$ConversationCopyWithImpl<$Res> extends _$ConversationCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? firstUser = freezed,
-    Object? secondUser = freezed,
+    Object? firstUserId = freezed,
+    Object? secondUserId = freezed,
     Object? messages = freezed,
   }) {
     return _then(_Conversation(
-      firstUser: firstUser == freezed
-          ? _value.firstUser
-          : firstUser // ignore: cast_nullable_to_non_nullable
-              as ConversationParticipant,
-      secondUser: secondUser == freezed
-          ? _value.secondUser
-          : secondUser // ignore: cast_nullable_to_non_nullable
-              as ConversationParticipant,
+      firstUserId: firstUserId == freezed
+          ? _value.firstUserId
+          : firstUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+      secondUserId: secondUserId == freezed
+          ? _value.secondUserId
+          : secondUserId // ignore: cast_nullable_to_non_nullable
+              as String,
       messages: messages == freezed
           ? _value.messages
           : messages // ignore: cast_nullable_to_non_nullable
@@ -167,23 +314,23 @@ class __$ConversationCopyWithImpl<$Res> extends _$ConversationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Conversation implements _Conversation {
   const _$_Conversation(
-      {required this.firstUser,
-      required this.secondUser,
+      {required this.firstUserId,
+      required this.secondUserId,
       required this.messages});
 
   factory _$_Conversation.fromJson(Map<String, dynamic> json) =>
       _$$_ConversationFromJson(json);
 
   @override
-  final ConversationParticipant firstUser;
+  final String firstUserId;
   @override
-  final ConversationParticipant secondUser;
+  final String secondUserId;
   @override
   final List<Message> messages;
 
   @override
   String toString() {
-    return 'Conversation(firstUser: $firstUser, secondUser: $secondUser, messages: $messages)';
+    return 'Conversation(firstUserId: $firstUserId, secondUserId: $secondUserId, messages: $messages)';
   }
 
   @override
@@ -191,17 +338,18 @@ class _$_Conversation implements _Conversation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Conversation &&
-            const DeepCollectionEquality().equals(other.firstUser, firstUser) &&
             const DeepCollectionEquality()
-                .equals(other.secondUser, secondUser) &&
+                .equals(other.firstUserId, firstUserId) &&
+            const DeepCollectionEquality()
+                .equals(other.secondUserId, secondUserId) &&
             const DeepCollectionEquality().equals(other.messages, messages));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(firstUser),
-      const DeepCollectionEquality().hash(secondUser),
+      const DeepCollectionEquality().hash(firstUserId),
+      const DeepCollectionEquality().hash(secondUserId),
       const DeepCollectionEquality().hash(messages));
 
   @JsonKey(ignore: true)
@@ -217,17 +365,17 @@ class _$_Conversation implements _Conversation {
 
 abstract class _Conversation implements Conversation {
   const factory _Conversation(
-      {required ConversationParticipant firstUser,
-      required ConversationParticipant secondUser,
+      {required String firstUserId,
+      required String secondUserId,
       required List<Message> messages}) = _$_Conversation;
 
   factory _Conversation.fromJson(Map<String, dynamic> json) =
       _$_Conversation.fromJson;
 
   @override
-  ConversationParticipant get firstUser;
+  String get firstUserId;
   @override
-  ConversationParticipant get secondUser;
+  String get secondUserId;
   @override
   List<Message> get messages;
   @override
@@ -442,199 +590,5 @@ abstract class _Message implements Message {
   @override
   @JsonKey(ignore: true)
   _$MessageCopyWith<_Message> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-ConversationParticipant _$ConversationParticipantFromJson(
-    Map<String, dynamic> json) {
-  return _ConversationParticipant.fromJson(json);
-}
-
-/// @nodoc
-class _$ConversationParticipantTearOff {
-  const _$ConversationParticipantTearOff();
-
-  _ConversationParticipant call(
-      {required String id, required String name, String? photoUrl}) {
-    return _ConversationParticipant(
-      id: id,
-      name: name,
-      photoUrl: photoUrl,
-    );
-  }
-
-  ConversationParticipant fromJson(Map<String, Object?> json) {
-    return ConversationParticipant.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $ConversationParticipant = _$ConversationParticipantTearOff();
-
-/// @nodoc
-mixin _$ConversationParticipant {
-  String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String? get photoUrl => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ConversationParticipantCopyWith<ConversationParticipant> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ConversationParticipantCopyWith<$Res> {
-  factory $ConversationParticipantCopyWith(ConversationParticipant value,
-          $Res Function(ConversationParticipant) then) =
-      _$ConversationParticipantCopyWithImpl<$Res>;
-  $Res call({String id, String name, String? photoUrl});
-}
-
-/// @nodoc
-class _$ConversationParticipantCopyWithImpl<$Res>
-    implements $ConversationParticipantCopyWith<$Res> {
-  _$ConversationParticipantCopyWithImpl(this._value, this._then);
-
-  final ConversationParticipant _value;
-  // ignore: unused_field
-  final $Res Function(ConversationParticipant) _then;
-
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? photoUrl = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      photoUrl: photoUrl == freezed
-          ? _value.photoUrl
-          : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-abstract class _$ConversationParticipantCopyWith<$Res>
-    implements $ConversationParticipantCopyWith<$Res> {
-  factory _$ConversationParticipantCopyWith(_ConversationParticipant value,
-          $Res Function(_ConversationParticipant) then) =
-      __$ConversationParticipantCopyWithImpl<$Res>;
-  @override
-  $Res call({String id, String name, String? photoUrl});
-}
-
-/// @nodoc
-class __$ConversationParticipantCopyWithImpl<$Res>
-    extends _$ConversationParticipantCopyWithImpl<$Res>
-    implements _$ConversationParticipantCopyWith<$Res> {
-  __$ConversationParticipantCopyWithImpl(_ConversationParticipant _value,
-      $Res Function(_ConversationParticipant) _then)
-      : super(_value, (v) => _then(v as _ConversationParticipant));
-
-  @override
-  _ConversationParticipant get _value =>
-      super._value as _ConversationParticipant;
-
-  @override
-  $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? photoUrl = freezed,
-  }) {
-    return _then(_ConversationParticipant(
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: name == freezed
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      photoUrl: photoUrl == freezed
-          ? _value.photoUrl
-          : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$_ConversationParticipant implements _ConversationParticipant {
-  const _$_ConversationParticipant(
-      {required this.id, required this.name, this.photoUrl});
-
-  factory _$_ConversationParticipant.fromJson(Map<String, dynamic> json) =>
-      _$$_ConversationParticipantFromJson(json);
-
-  @override
-  final String id;
-  @override
-  final String name;
-  @override
-  final String? photoUrl;
-
-  @override
-  String toString() {
-    return 'ConversationParticipant(id: $id, name: $name, photoUrl: $photoUrl)';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _ConversationParticipant &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality().equals(other.photoUrl, photoUrl));
-  }
-
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(photoUrl));
-
-  @JsonKey(ignore: true)
-  @override
-  _$ConversationParticipantCopyWith<_ConversationParticipant> get copyWith =>
-      __$ConversationParticipantCopyWithImpl<_ConversationParticipant>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ConversationParticipantToJson(this);
-  }
-}
-
-abstract class _ConversationParticipant implements ConversationParticipant {
-  const factory _ConversationParticipant(
-      {required String id,
-      required String name,
-      String? photoUrl}) = _$_ConversationParticipant;
-
-  factory _ConversationParticipant.fromJson(Map<String, dynamic> json) =
-      _$_ConversationParticipant.fromJson;
-
-  @override
-  String get id;
-  @override
-  String get name;
-  @override
-  String? get photoUrl;
-  @override
-  @JsonKey(ignore: true)
-  _$ConversationParticipantCopyWith<_ConversationParticipant> get copyWith =>
       throw _privateConstructorUsedError;
 }

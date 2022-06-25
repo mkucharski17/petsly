@@ -1,13 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:petsly/data/user/user_data.dart';
 
 part 'conversation.freezed.dart';
 part 'conversation.g.dart';
 
 @freezed
+class ConversationPreviewData with _$ConversationPreviewData {
+  const factory ConversationPreviewData({
+    required UserData otherUserData,
+    required QueryDocumentSnapshot<Conversation> conversation,
+  }) = _ConversationPreviewData;
+}
+
+@freezed
 class Conversation with _$Conversation {
   const factory Conversation({
-    required ConversationParticipant firstUser,
-    required ConversationParticipant secondUser,
+    required String firstUserId,
+    required String secondUserId,
     required List<Message> messages,
   }) = _Conversation;
 
@@ -26,16 +36,4 @@ class Message with _$Message {
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
-}
-
-@freezed
-class ConversationParticipant with _$ConversationParticipant {
-  const factory ConversationParticipant({
-    required String id,
-    required String name,
-    String? photoUrl,
-  }) = _ConversationParticipant;
-
-  factory ConversationParticipant.fromJson(Map<String, dynamic> json) =>
-      _$ConversationParticipantFromJson(json);
 }

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petsly/data/chat/conversation.dart';
+import 'package:petsly/data/user/user_data.dart';
 import 'package:petsly/features/chat/bloc/conversation_details_cubit.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -9,25 +10,25 @@ class ConversationDetailsPage extends Page<void> {
   const ConversationDetailsPage({
     LocalKey? key,
     required this.otherUser,
-    required this.currentUser,
+    required this.currentUserId,
   }) : super(key: key);
 
-  final ConversationParticipant otherUser;
-  final ConversationParticipant currentUser;
+  final UserData otherUser;
+  final String currentUserId;
 
   @override
   Route<void> createRoute(BuildContext context) =>
       ConversationDetailsScreenRoute(
         page: this,
         otherUser: otherUser,
-        currentUser: currentUser,
+        currentUserId: currentUserId,
       );
 }
 
 class ConversationDetailsScreenRoute extends MaterialPageRoute<void> {
   ConversationDetailsScreenRoute({
-    required ConversationParticipant otherUser,
-    required ConversationParticipant currentUser,
+    required UserData otherUser,
+    required String currentUserId,
     ConversationDetailsPage? page,
   }) : super(
           settings: page,
@@ -35,7 +36,7 @@ class ConversationDetailsScreenRoute extends MaterialPageRoute<void> {
             create: (context) {
               return ConversationDetailsCubit(
                 firestore: context.read(),
-                currentUser: currentUser,
+                currentUserId: currentUserId,
                 otherUser: otherUser,
               );
             },
@@ -50,7 +51,7 @@ class ConversationDetailsScreen extends StatelessWidget {
     required this.otherUser,
   }) : super(key: key);
 
-  final ConversationParticipant otherUser;
+  final UserData otherUser;
 
   @override
   Widget build(BuildContext context) {

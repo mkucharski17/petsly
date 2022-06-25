@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:petsly/features/care/your_offers/add_offer_bottom_sheet.dart';
 import 'package:petsly/features/care/your_offers/bloc/your_offers_cubit.dart';
 import 'package:petsly/features/care/your_offers/editable_offer_page.dart';
 
@@ -25,7 +26,9 @@ class YourOffers extends StatelessWidget {
                   const SizedBox(height: 16),
                   IconButton(
                     iconSize: 36,
-                    onPressed: () {},
+                    onPressed: () {
+                      AddOfferBottomSheet.show(context);
+                    },
                     icon: const Icon(
                       Icons.add_circle_rounded,
                       size: 36,

@@ -3,34 +3,51 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/features/location/location_source.dart';
+import 'package:petsly/features/offers/bloc/offers_cubit.dart';
 import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
-import 'package:provider/provider.dart';
+
+class OffersMapPage extends Page<void> {
+  const OffersMapPage({LocalKey? key}) : super(key: key);
+
+  @override
+  Route<void> createRoute(BuildContext context) =>
+      OffersMapScreenRoute(page: this);
+}
+
+class OffersMapScreenRoute extends MaterialPageRoute<void> {
+  OffersMapScreenRoute({OffersMapPage? page})
+      : super(
+          settings: page,
+          builder: (context) => const OffersMapBuilder(),
+        );
+}
 
 class OffersMapBuilder extends StatelessWidget {
   const OffersMapBuilder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: context.read<Firestore>().getCollection('offers').get(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Znajdź pomoc'),
+      ),
+      body: BlocBuilder<OffersCubit, OffersState>(
+        builder: (context, state) {
+          if (state.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        final offers =
-            snapshot.data!.docs.map((e) => Offer.fromJson(e.mappedData));
-
-        return _OffersMap(
-          offers: offers.toList(),
-        );
-      },
+          return _OffersMap(
+            offers: state.offers,
+          );
+        },
+      ),
     );
   }
 }
@@ -41,14 +58,14 @@ class _OffersMap extends HookWidget {
     required this.offers,
   }) : super(key: key);
 
-  final List<Offer> offers;
+  final List<QueryDocumentSnapshot<Offer>> offers;
 
   @override
   Widget build(BuildContext context) {
     final markers = useState(<Marker>{});
     final clusterManager = useMemoized(
       () => ClusterManager<Offer>(
-        offers.map((e) => e.toCLusterItem()),
+        offers.map((e) => e.data().toCLusterItem()),
         (m) => markers.value = m,
         levels: [1, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5, 20.0],
         markerBuilder: (cluster) => _markerBuilder(context, cluster),

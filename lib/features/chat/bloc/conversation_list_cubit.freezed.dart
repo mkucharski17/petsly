@@ -20,10 +20,10 @@ class _$ConversationListStateTearOff {
 
   _ConversationListState call(
       {bool loading = true,
-      List<QueryDocumentSnapshot<Conversation>> conversationList = const []}) {
+      List<ConversationPreviewData> conversations = const []}) {
     return _ConversationListState(
       loading: loading,
-      conversationList: conversationList,
+      conversations: conversations,
     );
   }
 }
@@ -34,7 +34,7 @@ const $ConversationListState = _$ConversationListStateTearOff();
 /// @nodoc
 mixin _$ConversationListState {
   bool get loading => throw _privateConstructorUsedError;
-  List<QueryDocumentSnapshot<Conversation>> get conversationList =>
+  List<ConversationPreviewData> get conversations =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -47,9 +47,7 @@ abstract class $ConversationListStateCopyWith<$Res> {
   factory $ConversationListStateCopyWith(ConversationListState value,
           $Res Function(ConversationListState) then) =
       _$ConversationListStateCopyWithImpl<$Res>;
-  $Res call(
-      {bool loading,
-      List<QueryDocumentSnapshot<Conversation>> conversationList});
+  $Res call({bool loading, List<ConversationPreviewData> conversations});
 }
 
 /// @nodoc
@@ -64,17 +62,17 @@ class _$ConversationListStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? loading = freezed,
-    Object? conversationList = freezed,
+    Object? conversations = freezed,
   }) {
     return _then(_value.copyWith(
       loading: loading == freezed
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
-      conversationList: conversationList == freezed
-          ? _value.conversationList
-          : conversationList // ignore: cast_nullable_to_non_nullable
-              as List<QueryDocumentSnapshot<Conversation>>,
+      conversations: conversations == freezed
+          ? _value.conversations
+          : conversations // ignore: cast_nullable_to_non_nullable
+              as List<ConversationPreviewData>,
     ));
   }
 }
@@ -86,9 +84,7 @@ abstract class _$ConversationListStateCopyWith<$Res>
           $Res Function(_ConversationListState) then) =
       __$ConversationListStateCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {bool loading,
-      List<QueryDocumentSnapshot<Conversation>> conversationList});
+  $Res call({bool loading, List<ConversationPreviewData> conversations});
 }
 
 /// @nodoc
@@ -105,17 +101,17 @@ class __$ConversationListStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? loading = freezed,
-    Object? conversationList = freezed,
+    Object? conversations = freezed,
   }) {
     return _then(_ConversationListState(
       loading: loading == freezed
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
-      conversationList: conversationList == freezed
-          ? _value.conversationList
-          : conversationList // ignore: cast_nullable_to_non_nullable
-              as List<QueryDocumentSnapshot<Conversation>>,
+      conversations: conversations == freezed
+          ? _value.conversations
+          : conversations // ignore: cast_nullable_to_non_nullable
+              as List<ConversationPreviewData>,
     ));
   }
 }
@@ -124,18 +120,18 @@ class __$ConversationListStateCopyWithImpl<$Res>
 
 class _$_ConversationListState implements _ConversationListState {
   const _$_ConversationListState(
-      {this.loading = true, this.conversationList = const []});
+      {this.loading = true, this.conversations = const []});
 
   @JsonKey()
   @override
   final bool loading;
   @JsonKey()
   @override
-  final List<QueryDocumentSnapshot<Conversation>> conversationList;
+  final List<ConversationPreviewData> conversations;
 
   @override
   String toString() {
-    return 'ConversationListState(loading: $loading, conversationList: $conversationList)';
+    return 'ConversationListState(loading: $loading, conversations: $conversations)';
   }
 
   @override
@@ -145,14 +141,14 @@ class _$_ConversationListState implements _ConversationListState {
             other is _ConversationListState &&
             const DeepCollectionEquality().equals(other.loading, loading) &&
             const DeepCollectionEquality()
-                .equals(other.conversationList, conversationList));
+                .equals(other.conversations, conversations));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(loading),
-      const DeepCollectionEquality().hash(conversationList));
+      const DeepCollectionEquality().hash(conversations));
 
   @JsonKey(ignore: true)
   @override
@@ -163,14 +159,13 @@ class _$_ConversationListState implements _ConversationListState {
 
 abstract class _ConversationListState implements ConversationListState {
   const factory _ConversationListState(
-          {bool loading,
-          List<QueryDocumentSnapshot<Conversation>> conversationList}) =
-      _$_ConversationListState;
+      {bool loading,
+      List<ConversationPreviewData> conversations}) = _$_ConversationListState;
 
   @override
   bool get loading;
   @override
-  List<QueryDocumentSnapshot<Conversation>> get conversationList;
+  List<ConversationPreviewData> get conversations;
   @override
   @JsonKey(ignore: true)
   _$ConversationListStateCopyWith<_ConversationListState> get copyWith =>

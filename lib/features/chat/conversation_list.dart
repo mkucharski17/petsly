@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +27,12 @@ class _ConversationListBuilder extends StatelessWidget {
         if (state.loading) {
           return const CircularProgressIndicator();
         } else {
-          return _ConversationListView(conversations: state.conversationList);
+          if (state.conversations.isEmpty) {
+            return const Center(
+              child: Text('Nie masz jeszcze żadnych rozmów'),
+            );
+          }
+          return _ConversationListView(conversations: state.conversations);
         }
       },
     );
@@ -41,7 +45,7 @@ class _ConversationListView extends StatelessWidget {
     required this.conversations,
   }) : super(key: key);
 
-  final List<QueryDocumentSnapshot<Conversation>> conversations;
+  final List<ConversationPreviewData> conversations;
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +53,9 @@ class _ConversationListView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 16),
       itemCount: conversations.length,
       itemBuilder: (context, index) {
-        final conversation = conversations[index].data();
+        final conversation = conversations[index].conversation.data();
         final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-        final otherUser = conversation.firstUser.id != currentUserId
-            ? conversation.firstUser
-            : conversation.secondUser;
-
+        final otherUser = conversations[index].otherUserData;
         final lastMessage = conversation.messages.last;
         final lastMessageSenderName =
             lastMessage.senderId == currentUserId ? 'Ty' : otherUser.name;
@@ -73,11 +74,7 @@ class _ConversationListView extends StatelessWidget {
             Navigator.of(context).push(
               ConversationDetailsScreenRoute(
                 otherUser: otherUser,
-                currentUser: ConversationParticipant(
-                  id: user.id,
-                  name: user.name,
-                  photoUrl: user.photoUrl,
-                ),
+                currentUserId: user.id,
               ),
             );
           },

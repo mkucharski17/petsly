@@ -10,6 +10,7 @@ import 'package:petsly/features/auth/init_page.dart';
 import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/location/location_service.dart';
 import 'package:petsly/features/location/location_source.dart';
+import 'package:petsly/features/offers/bloc/offers_cubit.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -77,7 +78,14 @@ class _GlobalProviders extends StatelessWidget {
             ),
           ),
           BlocProvider(
+            lazy: false,
             create: (context) => ConversationListCubit(
+              firestore: context.read(),
+            ),
+          ),
+          BlocProvider(
+            lazy: false,
+            create: (context) => OffersCubit(
               firestore: context.read(),
             ),
           ),

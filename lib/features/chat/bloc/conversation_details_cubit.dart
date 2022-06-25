@@ -5,13 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:petsly/data/chat/conversation.dart';
 import 'package:petsly/data/firestore.dart';
+import 'package:petsly/data/user/user_data.dart';
 
 part 'conversation_details_cubit.freezed.dart';
 
 class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
   ConversationDetailsCubit({
     required this.firestore,
-    required this.currentUser,
+    required this.currentUserId,
     required this.otherUser,
   }) : super(const ConversationDetailsState()) {
     messagesSubscription = firestore
@@ -24,15 +25,15 @@ class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
         .listen(_onMessage);
   }
 
-  final ConversationParticipant currentUser;
-  final ConversationParticipant otherUser;
+  final String currentUserId;
+  final UserData otherUser;
   final Firestore firestore;
   late final StreamSubscription messagesSubscription;
 
   void sendMessage(String messageContent) {
     final conversation = state.conversation;
     final message = Message(
-      senderId: currentUser.id,
+      senderId: currentUserId,
       dateTime: DateTime.now().toUtc(),
       content: messageContent,
     );
@@ -52,8 +53,8 @@ class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
       firestore.addDocument(
         collectionPath: 'conversations',
         data: Conversation(
-          firstUser: currentUser,
-          secondUser: otherUser,
+          firstUserId: currentUserId,
+          secondUserId: otherUser.id,
           messages: [message],
         ).toJson(),
       );
@@ -86,11 +87,11 @@ class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
 
   void _onMessage(QuerySnapshot<Conversation> snapshot) {
     final conversation = snapshot.docs.firstWhereOrNull((element) {
-      final firstUser = element.data().firstUser;
-      final secondUser = element.data().secondUser;
+      final firstUserId = element.data().firstUserId;
+      final secondUserId = element.data().secondUserId;
 
-      return firstUser.id == currentUser.id && secondUser.id == otherUser.id ||
-          firstUser.id == otherUser.id && secondUser.id == currentUser.id;
+      return firstUserId == currentUserId && secondUserId == otherUser ||
+          firstUserId == otherUser && secondUserId == currentUserId;
     });
 
     emit(state.copyWith(
