@@ -1,38 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:petsly/data/offer/offer.dart';
-import 'package:petsly/features/care/your_offers/bloc/edit_offer_cubit.dart';
+import 'package:petsly/features/care/your_offers/bloc/create_offer_cubit.dart';
 import 'package:petsly/utils/date_time_extension.dart';
 import 'package:petsly/utils/ui/utils/widget_extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class EditableOfferPage extends Page<void> {
-  const EditableOfferPage({
-    required this.doc,
+class CreateOfferPage extends Page<void> {
+  const CreateOfferPage({
+    required this.latLng,
     LocalKey? key,
   }) : super(key: key);
 
-  final QueryDocumentSnapshot<Offer> doc;
+  final LatLng latLng;
 
   @override
   Route<void> createRoute(BuildContext context) =>
-      EditableOfferScreenRoute(doc: doc, page: this);
+      CreateOfferScreenRoute(latLng: latLng, page: this);
 }
 
-class EditableOfferScreenRoute extends MaterialPageRoute<void> {
-  EditableOfferScreenRoute({
-    required QueryDocumentSnapshot<Offer> doc,
-    EditableOfferPage? page,
+class CreateOfferScreenRoute extends MaterialPageRoute<void> {
+  CreateOfferScreenRoute({
+    required LatLng latLng,
+    CreateOfferPage? page,
   }) : super(
           settings: page,
-          builder: (context) => BlocProvider<EditOfferCubit>(
-            create: (context) => EditOfferCubit(
-              originalOffer: doc,
+          builder: (context) => BlocProvider(
+            create: (context) => CreateOfferCubit(
               firestore: context.read(),
+              latLng: latLng,
             ),
-            child: OfferDetailsScreen(offer: doc.data()),
+            child: OfferDetailsScreen(latLng: latLng),
           ),
         );
 }
@@ -40,22 +40,21 @@ class EditableOfferScreenRoute extends MaterialPageRoute<void> {
 class OfferDetailsScreen extends HookWidget {
   const OfferDetailsScreen({
     Key? key,
-    required this.offer,
+    required this.latLng,
   }) : super(key: key);
 
-  final Offer offer;
+  final LatLng latLng;
 
   @override
   Widget build(BuildContext context) {
-    final titleController = useTextEditingController(text: offer.title);
-    final descriptionController =
-        useTextEditingController(text: offer.description);
+    final titleController = useTextEditingController();
+    final descriptionController = useTextEditingController();
 
-    return BlocBuilder<EditOfferCubit, EditOfferState>(
+    return BlocBuilder<CreateOfferCubit, CreateOfferState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Edycja oferty'),
+            title: const Text('Nowa oferta'),
             centerTitle: true,
           ),
           body: SafeArea(
@@ -73,32 +72,29 @@ class OfferDetailsScreen extends HookWidget {
                             controller: titleController,
                             style: const TextStyle(fontSize: 16),
                             onChanged: (title) {
-                              context.read<EditOfferCubit>().updateTitle(title);
+                              context
+                                  .read<CreateOfferCubit>()
+                                  .updateTitle(title);
                             },
                             maxLines: null,
                           ),
                         ),
                         const SizedBox(width: 24),
-                        Opacity(
-                          opacity: state.changed ? 1 : 0.25,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(24),
-                            onTap: state.changed
-                                ? () {
-                                    context.read<EditOfferCubit>().save();
-                                    Navigator.of(context).pop();
-                                  }
-                                : null,
-                            child: Container(
-                              width: 100,
-                              height: 36,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(color: Colors.blue),
-                              ),
-                              child: const Text('Zapisz'),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(24),
+                          onTap: () {
+                            context.read<CreateOfferCubit>().save();
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 36,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(color: Colors.blue),
                             ),
+                            child: const Text('Zapisz'),
                           ),
                         ),
                       ],
@@ -109,7 +105,7 @@ class OfferDetailsScreen extends HookWidget {
                       style: const TextStyle(fontSize: 16),
                       onChanged: (description) {
                         context
-                            .read<EditOfferCubit>()
+                            .read<CreateOfferCubit>()
                             .updateDescription(description);
                       },
                       maxLines: null,
@@ -215,7 +211,7 @@ class _Calendar extends HookWidget {
               }
 
               selectedDays.value = [...days];
-              context.read<EditOfferCubit>().updateDays(days);
+              context.read<CreateOfferCubit>().updateDays(days);
             },
             availableCalendarFormats: {
               CalendarFormat.month: 'miesiąc',
@@ -239,7 +235,7 @@ class _AnimalType extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final types = context.watch<EditOfferCubit>().state.offer.animalTypes;
+    final types = context.watch<CreateOfferCubit>().state.offer.animalTypes;
     final isTrue = useState(types.contains(animalType));
 
     return Padding(
@@ -251,7 +247,7 @@ class _AnimalType extends HookWidget {
             value: isTrue.value,
             onChanged: (value) {
               isTrue.value = value ?? true;
-              context.read<EditOfferCubit>().toggleType(animalType);
+              context.read<CreateOfferCubit>().toggleType(animalType);
             },
           ),
           const SizedBox(width: 6),

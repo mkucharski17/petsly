@@ -10,6 +10,7 @@ import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/data/user/user_data.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/chat/conversation_details_page.dart';
+import 'package:petsly/features/offers/bloc/favourites_cubit.dart';
 import 'package:petsly/features/offers/offer_details/bloc/offer_request_cubit.dart';
 import 'package:petsly/features/offers/offer_details/confirm_request_dialog.dart';
 import 'package:petsly/utils/date_time_extension.dart';
@@ -52,156 +53,177 @@ class OfferDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: FutureBuilder<QueryDocumentSnapshot?>(
-            future: context.read<Firestore>().getDocument(
-                collectionPath: 'users',
-                snapshotQuery: (snapshot) {
-                  return snapshot.mappedData['id'] == offer.ownerId;
-                }),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: const CircularProgressIndicator(),
-                );
-              }
-              final offerOwner = UserData.fromJson(snapshot.data!.mappedData);
+    return BlocBuilder<FavouritesCubit, List<String>>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Szczegóły oferty'),
+            actions: [
+              IconButton(
+                onPressed: () =>
+                    context.read<FavouritesCubit>().toggle(offer.id),
+                icon: state.contains(offer.id)
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Colors.red,
+                      )
+                    : const Icon(Icons.favorite_outline),
+              ),
+            ],
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: FutureBuilder<QueryDocumentSnapshot?>(
+                future: context.read<Firestore>().getDocument(
+                    collectionPath: 'users',
+                    snapshotQuery: (snapshot) {
+                      return snapshot.mappedData['id'] == offer.ownerId;
+                    }),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+                  final offerOwner =
+                      UserData.fromJson(snapshot.data!.mappedData);
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          offer.title,
-                          style: const TextStyle(fontSize: 24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              offer.title,
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  offerOwner.name,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                                const SizedBox(width: 12),
+                                _OwnerPhoto(photoUrl: offerOwner.photoUrl)
+                              ],
+                            ),
+                          ],
+                        ),
+                        if (offerOwner.description != null)
+                          Text(
+                            offerOwner.description!,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        const SizedBox(
+                          height: 12,
                         ),
                         Row(
                           children: [
-                            Text(
-                              offerOwner.name,
-                              style: const TextStyle(fontSize: 18),
+                            Text('Telefon: ${offerOwner.phone}'),
+                            const SizedBox(width: 16),
+                            IconButton(
+                              iconSize: 20,
+                              onPressed: () {
+                                launch('tel:+48 ${offerOwner.phone}');
+                              },
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.blue,
+                              ),
                             ),
-                            const SizedBox(width: 12),
-                            _OwnerPhoto(photoUrl: offerOwner.photoUrl)
                           ],
                         ),
-                      ],
-                    ),
-                    if (offerOwner.description != null)
-                      Text(
-                        offerOwner.description!,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      children: [
-                        Text('Telefon: ${offerOwner.phone}'),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          iconSize: 20,
-                          onPressed: () {
-                            launch('tel:+48 ${offerOwner.phone}');
-                          },
-                          icon: const Icon(
-                            Icons.call,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('E-mail: ${offerOwner.email}'),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            launch('mailto:${offerOwner.email}');
-                          },
-                          iconSize: 20,
-                          icon: const Icon(
-                            Icons.email,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('Napisz na czacie'),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          iconSize: 20,
-                          onPressed: () async {
-                            final currentUserData = await context
-                                .read<Firestore>()
-                                .getDocument(
-                                  collectionPath: 'users',
-                                  snapshotQuery: (snapshot) {
-                                    return snapshot.mappedData['id'] ==
-                                        context.read<AuthStateCubit>().userId;
-                                  },
-                                );
-                            final user = UserData.fromJson(currentUserData!
-                                .data() as Map<String, dynamic>);
-
-                            Navigator.of(context).push(
-                              ConversationDetailsScreenRoute(
-                                currentUserId: user.id,
-                                otherUser: offerOwner,
+                        Row(
+                          children: [
+                            Text('E-mail: ${offerOwner.email}'),
+                            const SizedBox(width: 16),
+                            IconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                launch('mailto:${offerOwner.email}');
+                              },
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.email,
+                                color: Colors.blue,
                               ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.message,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: PetslyDivider(),
-                    ),
-                    const Text(
-                      'Szczegóły',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      offer.description,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Row(
-                      children: [
-                        for (final animalType in AnimalType.values)
-                          Expanded(
-                            child: _AnimalType(
-                              animalType: animalType,
-                              available: offer.animalTypes.contains(animalType),
                             ),
-                          )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text('Napisz na czacie'),
+                            const SizedBox(width: 16),
+                            IconButton(
+                              iconSize: 20,
+                              onPressed: () async {
+                                final currentUserData =
+                                    await context.read<Firestore>().getDocument(
+                                          collectionPath: 'users',
+                                          snapshotQuery: (snapshot) {
+                                            return snapshot.mappedData['id'] ==
+                                                context
+                                                    .read<AuthStateCubit>()
+                                                    .userId;
+                                          },
+                                        );
+                                final user = UserData.fromJson(currentUserData!
+                                    .data() as Map<String, dynamic>);
+
+                                Navigator.of(context).push(
+                                  ConversationDetailsScreenRoute(
+                                    currentUserId: user.id,
+                                    otherUser: offerOwner,
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.message,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: PetslyDivider(),
+                        ),
+                        const Text(
+                          'Szczegóły',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          offer.description,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        Row(
+                          children: [
+                            for (final animalType in AnimalType.values)
+                              Expanded(
+                                child: _AnimalType(
+                                  animalType: animalType,
+                                  available:
+                                      offer.animalTypes.contains(animalType),
+                                ),
+                              )
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        const PetslyDivider(),
+                        _Calendar(offer: offer),
                       ],
-                    ),
-                    const SizedBox(height: 16),
-                    const PetslyDivider(),
-                    _Calendar(offer: offer),
-                  ],
-                ).columnPadded24,
-              );
-            },
+                    ).columnPadded24,
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

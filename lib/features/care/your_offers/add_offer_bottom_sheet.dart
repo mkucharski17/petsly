@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:petsly/features/care/your_offers/create_offer_page.dart';
 import 'package:petsly/features/location/location_service.dart';
 import 'package:petsly/features/location/location_source.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ class AddOfferBottomSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useState<GoogleMapController?>(null);
+    final center = useState(LocationSource.defaultLocation);
 
     return StreamBuilder<LatLng>(
       stream: context.read<LocationService>().locations,
@@ -36,17 +38,8 @@ class AddOfferBottomSheet extends HookWidget {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        // context.read<Firestore>().addDocument(
-                        //     collectionPath: 'offers', data: Offer(
-                        //     id: Uuid.,
-                        //     ownerId: FirebaseAuth.instance.currentUser!.uid,
-                        //     title: title,
-                        //     description: description,
-                        //     animalTypes: animalTypes,
-                        //     latLng: latLng,
-                        //     availableDays: availableDays))
-                        // Navigator.of(context).pushReplacement(
-                        //     EditableOfferScreenRoute(doc: doc));
+                        Navigator.of(context).pushReplacement(
+                            CreateOfferScreenRoute(latLng: center.value));
                       },
                       child: const Text('Zatwierdź'),
                     ),
@@ -66,11 +59,12 @@ class AddOfferBottomSheet extends HookWidget {
                           target:
                               snapshot.data ?? LocationSource.defaultLocation,
                         ),
-                        onCameraMove: (position) {},
-                        onMapCreated: (GoogleMapController mapController) {
+                        onCameraMove: (position) {
+                          center.value = position.target;
+                        },
+                        onMapCreated: (mapController) {
                           controller.value = mapController;
                         },
-                        onCameraIdle: () {},
                       ),
                       const Icon(
                         Icons.location_pin,

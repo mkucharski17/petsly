@@ -1,33 +1,37 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/offer/offer.dart';
+import 'package:uuid/uuid.dart';
 
-part 'edit_offer_cubit.freezed.dart';
+part 'create_offer_cubit.freezed.dart';
 
-class EditOfferCubit extends Cubit<EditOfferState> {
-  EditOfferCubit({
-    required this.originalOffer,
+class CreateOfferCubit extends Cubit<CreateOfferState> {
+  CreateOfferCubit({
     required this.firestore,
+    required LatLng latLng,
   }) : super(
-          EditOfferState(
-            offer: originalOffer.data(),
-            changed: false,
+          CreateOfferState(
+            offer: Offer(
+                id: const Uuid().v4(),
+                ownerId: FirebaseAuth.instance.currentUser!.uid,
+                animalTypes: [],
+                latLng: latLng,
+                description: '',
+                title: '',
+                availableDays: []),
           ),
-        ) {}
+        );
 
-  final QueryDocumentSnapshot<Offer> originalOffer;
   final Firestore firestore;
 
   void updateTitle(String value) {
     final newOffer = state.offer.copyWith(title: value);
 
     emit(
-      state.copyWith(
-        offer: newOffer,
-        changed: newOffer != originalOffer,
-      ),
+      state.copyWith(offer: newOffer),
     );
   }
 
@@ -35,10 +39,7 @@ class EditOfferCubit extends Cubit<EditOfferState> {
     final newOffer = state.offer.copyWith(description: value);
 
     emit(
-      state.copyWith(
-        offer: newOffer,
-        changed: newOffer != originalOffer,
-      ),
+      state.copyWith(offer: newOffer),
     );
   }
 
@@ -53,10 +54,7 @@ class EditOfferCubit extends Cubit<EditOfferState> {
     final newOffer = state.offer.copyWith(animalTypes: [...types]);
 
     emit(
-      state.copyWith(
-        offer: newOffer,
-        changed: newOffer != originalOffer,
-      ),
+      state.copyWith(offer: newOffer),
     );
   }
 
@@ -64,26 +62,19 @@ class EditOfferCubit extends Cubit<EditOfferState> {
     final newOffer = state.offer.copyWith(availableDays: [...days]);
 
     emit(
-      state.copyWith(
-        offer: newOffer,
-        changed: newOffer != originalOffer,
-      ),
+      state.copyWith(offer: newOffer),
     );
   }
 
   void save() {
-    firestore.updateDocument(
+    firestore.addDocument(
       collectionPath: 'offers',
-      docId: originalOffer.reference.id,
       data: state.offer.toJson(),
     );
   }
 }
 
 @freezed
-class EditOfferState with _$EditOfferState {
-  const factory EditOfferState({
-    required Offer offer,
-    required bool changed,
-  }) = _EditOfferState;
+class CreateOfferState with _$CreateOfferState {
+  const factory CreateOfferState({required Offer offer}) = _CreateOfferState;
 }

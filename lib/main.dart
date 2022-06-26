@@ -10,6 +10,7 @@ import 'package:petsly/features/auth/init_page.dart';
 import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/location/location_service.dart';
 import 'package:petsly/features/location/location_source.dart';
+import 'package:petsly/features/offers/bloc/favourites_cubit.dart';
 import 'package:petsly/features/offers/bloc/offers_cubit.dart';
 import 'package:provider/provider.dart';
 
@@ -89,6 +90,10 @@ class _GlobalProviders extends StatelessWidget {
               firestore: context.read(),
             ),
           ),
+          BlocProvider(
+            create: (context) =>
+                FavouritesCubit(firestore: context.read())..init(),
+          )
         ],
         child: app,
       ),

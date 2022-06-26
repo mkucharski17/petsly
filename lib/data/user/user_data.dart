@@ -12,6 +12,7 @@ class UserData with _$UserData {
     required String? description,
     required String? phone,
     required String? photoUrl,
+    @Default([]) List<String> favourites,
   }) = _UserData;
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

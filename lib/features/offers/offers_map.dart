@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/features/location/location_source.dart';
 import 'package:petsly/features/offers/bloc/offers_cubit.dart';
+import 'package:petsly/features/offers/favourites_page.dart';
 import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
 
 class OffersMapPage extends Page<void> {
@@ -36,6 +37,13 @@ class OffersMapBuilder extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Znajdź pomoc'),
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Navigator.of(context).push(FavouritesScreenRoute()),
+            icon: const Icon(Icons.favorite_outline),
+          ),
+        ],
       ),
       body: BlocBuilder<OffersCubit, OffersState>(
         builder: (context, state) {
@@ -102,6 +110,11 @@ class _OffersMap extends HookWidget {
                   clusterManager.updateMap();
                 },
               ),
+              PageView.builder(
+                itemBuilder: (context, index) {
+                  return Container();
+                },
+              )
             ],
           );
         } else {
@@ -134,17 +147,17 @@ Future<Marker> buildMarker(BuildContext context, Cluster<Offer> cluster) async {
     infoWindow: infoWindow,
     icon: cluster.isMultiple
         ? await getNotChosenClusterBitmap(
-            circleSize: 110,
+            circleSize: 140,
             color: Colors.blue,
             borderColor: Colors.blue.withOpacity(0.28),
-            borderSize: 10,
+            borderSize: 20,
             text: cluster.count.toString(),
           )
         : await getChosenMarkerBitmap(
-            circleSize: 40,
+            circleSize: 60,
             color: Colors.blue,
             borderColor: Colors.white,
-            borderSize: 10,
+            borderSize: 15,
           ),
   );
 }

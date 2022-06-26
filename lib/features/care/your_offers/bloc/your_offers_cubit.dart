@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,23 +15,31 @@ class YourOffersCubit extends Cubit<YourOffersState> {
   }) : super(const YourOffersState());
 
   final Firestore firestore;
+  StreamSubscription<QuerySnapshot<Offer>>? subscription;
 
-  Future<void> fetch() async {
+  Future<void> init() async {
     emit(state.copyWith(loading: true));
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
-    final offers = await firestore
+    subscription = firestore
         .getCollection('offers')
         .where('ownerId', isEqualTo: currentUserId)
         .withConverter<Offer>(
             fromFirestore: (snapshot, _) => Offer.fromJson(snapshot.data()!),
             toFirestore: (offer, _) => offer.toJson())
-        .get();
+        .snapshots()
+        .listen((event) {
+      emit(state.copyWith(
+        yourOfferList: event.docs,
+        loading: false,
+      ));
+    });
+  }
 
-    emit(state.copyWith(
-      yourOfferList: offers.docs,
-      loading: false,
-    ));
+  @override
+  Future<void> close() {
+    subscription?.cancel();
+    return super.close();
   }
 }
 

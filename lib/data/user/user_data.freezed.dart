@@ -28,7 +28,8 @@ class _$UserDataTearOff {
       required String email,
       required String? description,
       required String? phone,
-      required String? photoUrl}) {
+      required String? photoUrl,
+      List<String> favourites = const []}) {
     return _UserData(
       id: id,
       name: name,
@@ -36,6 +37,7 @@ class _$UserDataTearOff {
       description: description,
       phone: phone,
       photoUrl: photoUrl,
+      favourites: favourites,
     );
   }
 
@@ -55,6 +57,7 @@ mixin _$UserData {
   String? get description => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
   String? get photoUrl => throw _privateConstructorUsedError;
+  List<String> get favourites => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -72,7 +75,8 @@ abstract class $UserDataCopyWith<$Res> {
       String email,
       String? description,
       String? phone,
-      String? photoUrl});
+      String? photoUrl,
+      List<String> favourites});
 }
 
 /// @nodoc
@@ -91,6 +95,7 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
     Object? description = freezed,
     Object? phone = freezed,
     Object? photoUrl = freezed,
+    Object? favourites = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -117,6 +122,10 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      favourites: favourites == freezed
+          ? _value.favourites
+          : favourites // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -132,7 +141,8 @@ abstract class _$UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res> {
       String email,
       String? description,
       String? phone,
-      String? photoUrl});
+      String? photoUrl,
+      List<String> favourites});
 }
 
 /// @nodoc
@@ -152,6 +162,7 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
     Object? description = freezed,
     Object? phone = freezed,
     Object? photoUrl = freezed,
+    Object? favourites = freezed,
   }) {
     return _then(_UserData(
       id: id == freezed
@@ -178,6 +189,10 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
           ? _value.photoUrl
           : photoUrl // ignore: cast_nullable_to_non_nullable
               as String?,
+      favourites: favourites == freezed
+          ? _value.favourites
+          : favourites // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -191,7 +206,8 @@ class _$_UserData implements _UserData {
       required this.email,
       required this.description,
       required this.phone,
-      required this.photoUrl});
+      required this.photoUrl,
+      this.favourites = const []});
 
   factory _$_UserData.fromJson(Map<String, dynamic> json) =>
       _$$_UserDataFromJson(json);
@@ -208,10 +224,13 @@ class _$_UserData implements _UserData {
   final String? phone;
   @override
   final String? photoUrl;
+  @JsonKey()
+  @override
+  final List<String> favourites;
 
   @override
   String toString() {
-    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photoUrl: $photoUrl)';
+    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photoUrl: $photoUrl, favourites: $favourites)';
   }
 
   @override
@@ -225,7 +244,9 @@ class _$_UserData implements _UserData {
             const DeepCollectionEquality()
                 .equals(other.description, description) &&
             const DeepCollectionEquality().equals(other.phone, phone) &&
-            const DeepCollectionEquality().equals(other.photoUrl, photoUrl));
+            const DeepCollectionEquality().equals(other.photoUrl, photoUrl) &&
+            const DeepCollectionEquality()
+                .equals(other.favourites, favourites));
   }
 
   @override
@@ -236,7 +257,8 @@ class _$_UserData implements _UserData {
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(description),
       const DeepCollectionEquality().hash(phone),
-      const DeepCollectionEquality().hash(photoUrl));
+      const DeepCollectionEquality().hash(photoUrl),
+      const DeepCollectionEquality().hash(favourites));
 
   @JsonKey(ignore: true)
   @override
@@ -256,7 +278,8 @@ abstract class _UserData implements UserData {
       required String email,
       required String? description,
       required String? phone,
-      required String? photoUrl}) = _$_UserData;
+      required String? photoUrl,
+      List<String> favourites}) = _$_UserData;
 
   factory _UserData.fromJson(Map<String, dynamic> json) = _$_UserData.fromJson;
 
@@ -272,6 +295,8 @@ abstract class _UserData implements UserData {
   String? get phone;
   @override
   String? get photoUrl;
+  @override
+  List<String> get favourites;
   @override
   @JsonKey(ignore: true)
   _$UserDataCopyWith<_UserData> get copyWith =>

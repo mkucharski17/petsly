@@ -12,7 +12,7 @@ class YourOffers extends StatelessWidget {
     return BlocProvider(
       create: (context) => YourOffersCubit(
         firestore: context.read(),
-      )..fetch(),
+      )..init(),
       child: Builder(builder: (context) {
         return BlocBuilder<YourOffersCubit, YourOffersState>(
           builder: (context, state) {
@@ -26,74 +26,77 @@ class YourOffers extends StatelessWidget {
                   const SizedBox(height: 16),
                   IconButton(
                     iconSize: 36,
-                    onPressed: () {
-                      AddOfferBottomSheet.show(context);
-                    },
+                    onPressed: () => AddOfferBottomSheet.show(context),
                     icon: const Icon(
                       Icons.add_circle_rounded,
                       size: 36,
                       color: Colors.blue,
                     ),
-                  )
+                  ),
                 ],
               );
             }
 
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemBuilder: (context, index) {
-                final data = state.yourOfferList[index].data();
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.blue,
+                onPressed: () => AddOfferBottomSheet.show(context),
+                child: const Icon(
+                  Icons.add,
+                  size: 36,
+                  color: Colors.white,
+                ),
+              ),
+              body: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemBuilder: (context, index) {
+                  final data = state.yourOfferList[index].data();
 
-                return GestureDetector(
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      EditableOfferScreenRoute(
-                        doc: state.yourOfferList[index],
+                  return GestureDetector(
+                    onTap: () async {
+                      await Navigator.of(context).push(
+                        EditableOfferScreenRoute(
+                          doc: state.yourOfferList[index],
+                        ),
+                      );
+                      context.read<YourOffersCubit>().init();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                    );
-                    context.read<YourOffersCubit>().fetch();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              data.title,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                data.title,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'id: ${data.id}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          data.description,
-                          style: const TextStyle(fontSize: 16),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                      ],
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            data.description,
+                            style: const TextStyle(fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
-              itemCount: state.yourOfferList.length,
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(height: 16),
+                itemCount: state.yourOfferList.length,
+              ),
             );
           },
         );
