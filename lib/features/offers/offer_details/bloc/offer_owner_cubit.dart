@@ -1,13 +1,17 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petsly/data/firestore.dart';
 import 'package:petsly/data/user/user_data.dart';
 
-class FavouritesCubit extends Cubit<List<String>> {
-  FavouritesCubit({required this.firestore}) : super(const []) {}
+class OfferOwnerCubit extends Cubit<UserData?> {
+  OfferOwnerCubit({
+    required this.firestore,
+    required this.ownerId,
+  }) : super(null);
+
+  final String ownerId;
 
   final Firestore firestore;
   StreamSubscription? subscription;
@@ -22,39 +26,32 @@ class FavouritesCubit extends Cubit<List<String>> {
         .listen(_onMessage);
   }
 
-  Future<void> toggle(String id) async {
+  Future<void> rate(int rate, String rateText) async {
     final doc = await firestore.getDocument(
       collectionPath: 'users',
       snapshotQuery: (snapshot) {
-        return snapshot.mappedData['id'] ==
-            FirebaseAuth.instance.currentUser!.uid;
+        return snapshot.mappedData['id'] == ownerId;
       },
     );
 
     final data = UserData.fromJson(doc!.mappedData);
-    final favourites = [...data.favourites];
 
-    if (favourites.contains(id)) {
-      favourites.remove(id);
-    } else {
-      favourites.add(id);
-    }
+    final rates = [...data.rates];
+
+    rates.add(Rate(rate: rate, textRate: rateText));
 
     firestore.updateDocument(
       collectionPath: 'users',
       docId: doc.id,
-      data: data.copyWith(favourites: favourites).toJson(),
+      data: data.copyWith(rates: rates).toJson(),
     );
   }
 
   void _onMessage(QuerySnapshot<UserData> snapshot) {
-    final favourites = snapshot.docs
-        .firstWhere((element) =>
-            element.data().id == FirebaseAuth.instance.currentUser!.uid)
-        .data()
-        .favourites;
+    final ownerData =
+        snapshot.docs.firstWhere((element) => element.data().id == ownerId);
 
-    emit(favourites);
+    emit(ownerData.data());
   }
 
   @override

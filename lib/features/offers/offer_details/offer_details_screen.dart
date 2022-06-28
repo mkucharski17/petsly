@@ -1,6 +1,5 @@
 import 'package:build_context/build_context.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +10,11 @@ import 'package:petsly/data/user/user_data.dart';
 import 'package:petsly/features/auth/bloc/auth_state_cubit.dart';
 import 'package:petsly/features/chat/conversation_details_page.dart';
 import 'package:petsly/features/offers/bloc/favourites_cubit.dart';
+import 'package:petsly/features/offers/offer_details/bloc/offer_owner_cubit.dart';
 import 'package:petsly/features/offers/offer_details/bloc/offer_request_cubit.dart';
 import 'package:petsly/features/offers/offer_details/confirm_request_dialog.dart';
+import 'package:petsly/features/offers/offer_details/rate_user_dialog.dart';
+import 'package:petsly/features/offers/offer_details/rates_screen.dart';
 import 'package:petsly/utils/date_time_extension.dart';
 import 'package:petsly/utils/ui/divider.dart';
 import 'package:petsly/utils/ui/utils/widget_extension.dart';
@@ -36,9 +38,15 @@ class OfferDetailsScreenRoute extends MaterialPageRoute<void> {
   OfferDetailsScreenRoute({required Offer offer, OfferDetailsPage? page})
       : super(
           settings: page,
-          builder: (context) => BlocProvider<OfferRequestCubit>(
-            create: (context) => OfferRequestCubit(firestore: context.read()),
-            child: OfferDetailsScreen(offer: offer),
+          builder: (context) => BlocProvider(
+            create: (context) => OfferOwnerCubit(
+              firestore: context.read(),
+              ownerId: offer.ownerId,
+            )..init(),
+            child: BlocProvider<OfferRequestCubit>(
+              create: (context) => OfferRequestCubit(firestore: context.read()),
+              child: OfferDetailsScreen(offer: offer),
+            ),
           ),
         );
 }
@@ -73,20 +81,13 @@ class OfferDetailsScreen extends StatelessWidget {
           ),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: FutureBuilder<QueryDocumentSnapshot?>(
-                future: context.read<Firestore>().getDocument(
-                    collectionPath: 'users',
-                    snapshotQuery: (snapshot) {
-                      return snapshot.mappedData['id'] == offer.ownerId;
-                    }),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
+              child: BlocBuilder<OfferOwnerCubit, UserData?>(
+                builder: (context, offerOwner) {
+                  if (offerOwner == null) {
                     return const Center(
                       child: const CircularProgressIndicator(),
                     );
                   }
-                  final offerOwner =
-                      UserData.fromJson(snapshot.data!.mappedData);
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -100,16 +101,59 @@ class OfferDetailsScreen extends StatelessWidget {
                               offer.title,
                               style: const TextStyle(fontSize: 24),
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  offerOwner.name,
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const SizedBox(width: 12),
-                                _OwnerPhoto(photoUrl: offerOwner.photoUrl)
-                              ],
+                            _OwnerPhoto(photoUrl: offerOwner.photoUrl),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              offerOwner.name,
+                              style: const TextStyle(fontSize: 18),
                             ),
+                            const SizedBox(width: 12),
+                            _Rate(rates: offerOwner.rates),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.star, color: Colors.yellow),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                RateUserDialog.show(
+                                  context,
+                                  onRate: (rate) {
+                                    context.read<OfferOwnerCubit>().rate(
+                                          rate.rate,
+                                          rate.textRate,
+                                        );
+                                  },
+                                );
+                              },
+                              child: const Text(
+                                'Oceń',
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            if (offerOwner.rates.isNotEmpty)
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    RatesScreenRoute(rates: offerOwner.rates),
+                                  );
+                                },
+                                child: const Text(
+                                  'Wszystkie oceny',
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                         if (offerOwner.description != null)
@@ -117,9 +161,7 @@ class OfferDetailsScreen extends StatelessWidget {
                             offerOwner.description!,
                             style: const TextStyle(fontSize: 14),
                           ),
-                        const SizedBox(
-                          height: 12,
-                        ),
+                        const SizedBox(height: 12),
                         Row(
                           children: [
                             Text('Telefon: ${offerOwner.phone}'),
@@ -225,6 +267,31 @@ class OfferDetailsScreen extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+class _Rate extends StatelessWidget {
+  const _Rate({
+    Key? key,
+    required this.rates,
+  }) : super(key: key);
+
+  final List<Rate> rates;
+
+  @override
+  Widget build(BuildContext context) {
+    int rateResult = 0;
+
+    for (final rate in rates) {
+      rateResult += rate.rate;
+    }
+
+    if (rateResult == 0) {
+      return const Text('(0/5) Brak ocen');
+    }
+
+    return Text(
+        '${(rateResult / rates.length).toStringAsFixed(2)}/5 (${rates.length})');
   }
 }
 
@@ -368,9 +435,7 @@ class _AnimalType extends StatelessWidget {
               Icons.close,
               color: Colors.red,
             ),
-          const SizedBox(
-            width: 6,
-          ),
+          const SizedBox(width: 6),
           Text(animalType.text()),
         ],
       ),
@@ -394,7 +459,7 @@ class _OwnerPhoto extends StatelessWidget {
       return const Icon(
         Icons.account_circle,
         color: Colors.grey,
-        size: 64,
+        size: 56,
       );
     }
     return ClipOval(

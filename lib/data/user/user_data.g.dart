@@ -17,6 +17,10 @@ _$_UserData _$$_UserDataFromJson(Map<String, dynamic> json) => _$_UserData(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      rates: (json['rates'] as List<dynamic>?)
+              ?.map((e) => Rate.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_UserDataToJson(_$_UserData instance) =>
@@ -28,4 +32,15 @@ Map<String, dynamic> _$$_UserDataToJson(_$_UserData instance) =>
       'phone': instance.phone,
       'photoUrl': instance.photoUrl,
       'favourites': instance.favourites,
+      'rates': instance.rates.map((e) => e.toJson()).toList(),
+    };
+
+_$_Rate _$$_RateFromJson(Map<String, dynamic> json) => _$_Rate(
+      rate: json['rate'] as int,
+      textRate: json['textRate'] as String,
+    );
+
+Map<String, dynamic> _$$_RateToJson(_$_Rate instance) => <String, dynamic>{
+      'rate': instance.rate,
+      'textRate': instance.textRate,
     };

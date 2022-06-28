@@ -29,7 +29,8 @@ class _$UserDataTearOff {
       required String? description,
       required String? phone,
       required String? photoUrl,
-      List<String> favourites = const []}) {
+      List<String> favourites = const [],
+      List<Rate> rates = const []}) {
     return _UserData(
       id: id,
       name: name,
@@ -38,6 +39,7 @@ class _$UserDataTearOff {
       phone: phone,
       photoUrl: photoUrl,
       favourites: favourites,
+      rates: rates,
     );
   }
 
@@ -58,6 +60,7 @@ mixin _$UserData {
   String? get phone => throw _privateConstructorUsedError;
   String? get photoUrl => throw _privateConstructorUsedError;
   List<String> get favourites => throw _privateConstructorUsedError;
+  List<Rate> get rates => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -76,7 +79,8 @@ abstract class $UserDataCopyWith<$Res> {
       String? description,
       String? phone,
       String? photoUrl,
-      List<String> favourites});
+      List<String> favourites,
+      List<Rate> rates});
 }
 
 /// @nodoc
@@ -96,6 +100,7 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
     Object? phone = freezed,
     Object? photoUrl = freezed,
     Object? favourites = freezed,
+    Object? rates = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -126,6 +131,10 @@ class _$UserDataCopyWithImpl<$Res> implements $UserDataCopyWith<$Res> {
           ? _value.favourites
           : favourites // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      rates: rates == freezed
+          ? _value.rates
+          : rates // ignore: cast_nullable_to_non_nullable
+              as List<Rate>,
     ));
   }
 }
@@ -142,7 +151,8 @@ abstract class _$UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res> {
       String? description,
       String? phone,
       String? photoUrl,
-      List<String> favourites});
+      List<String> favourites,
+      List<Rate> rates});
 }
 
 /// @nodoc
@@ -163,6 +173,7 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
     Object? phone = freezed,
     Object? photoUrl = freezed,
     Object? favourites = freezed,
+    Object? rates = freezed,
   }) {
     return _then(_UserData(
       id: id == freezed
@@ -193,6 +204,10 @@ class __$UserDataCopyWithImpl<$Res> extends _$UserDataCopyWithImpl<$Res>
           ? _value.favourites
           : favourites // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      rates: rates == freezed
+          ? _value.rates
+          : rates // ignore: cast_nullable_to_non_nullable
+              as List<Rate>,
     ));
   }
 }
@@ -207,7 +222,8 @@ class _$_UserData implements _UserData {
       required this.description,
       required this.phone,
       required this.photoUrl,
-      this.favourites = const []});
+      this.favourites = const [],
+      this.rates = const []});
 
   factory _$_UserData.fromJson(Map<String, dynamic> json) =>
       _$$_UserDataFromJson(json);
@@ -227,10 +243,13 @@ class _$_UserData implements _UserData {
   @JsonKey()
   @override
   final List<String> favourites;
+  @JsonKey()
+  @override
+  final List<Rate> rates;
 
   @override
   String toString() {
-    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photoUrl: $photoUrl, favourites: $favourites)';
+    return 'UserData(id: $id, name: $name, email: $email, description: $description, phone: $phone, photoUrl: $photoUrl, favourites: $favourites, rates: $rates)';
   }
 
   @override
@@ -246,7 +265,8 @@ class _$_UserData implements _UserData {
             const DeepCollectionEquality().equals(other.phone, phone) &&
             const DeepCollectionEquality().equals(other.photoUrl, photoUrl) &&
             const DeepCollectionEquality()
-                .equals(other.favourites, favourites));
+                .equals(other.favourites, favourites) &&
+            const DeepCollectionEquality().equals(other.rates, rates));
   }
 
   @override
@@ -258,7 +278,8 @@ class _$_UserData implements _UserData {
       const DeepCollectionEquality().hash(description),
       const DeepCollectionEquality().hash(phone),
       const DeepCollectionEquality().hash(photoUrl),
-      const DeepCollectionEquality().hash(favourites));
+      const DeepCollectionEquality().hash(favourites),
+      const DeepCollectionEquality().hash(rates));
 
   @JsonKey(ignore: true)
   @override
@@ -279,7 +300,8 @@ abstract class _UserData implements UserData {
       required String? description,
       required String? phone,
       required String? photoUrl,
-      List<String> favourites}) = _$_UserData;
+      List<String> favourites,
+      List<Rate> rates}) = _$_UserData;
 
   factory _UserData.fromJson(Map<String, dynamic> json) = _$_UserData.fromJson;
 
@@ -298,7 +320,167 @@ abstract class _UserData implements UserData {
   @override
   List<String> get favourites;
   @override
+  List<Rate> get rates;
+  @override
   @JsonKey(ignore: true)
   _$UserDataCopyWith<_UserData> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+Rate _$RateFromJson(Map<String, dynamic> json) {
+  return _Rate.fromJson(json);
+}
+
+/// @nodoc
+class _$RateTearOff {
+  const _$RateTearOff();
+
+  _Rate call({required int rate, required String textRate}) {
+    return _Rate(
+      rate: rate,
+      textRate: textRate,
+    );
+  }
+
+  Rate fromJson(Map<String, Object?> json) {
+    return Rate.fromJson(json);
+  }
+}
+
+/// @nodoc
+const $Rate = _$RateTearOff();
+
+/// @nodoc
+mixin _$Rate {
+  int get rate => throw _privateConstructorUsedError;
+  String get textRate => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RateCopyWith<Rate> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RateCopyWith<$Res> {
+  factory $RateCopyWith(Rate value, $Res Function(Rate) then) =
+      _$RateCopyWithImpl<$Res>;
+  $Res call({int rate, String textRate});
+}
+
+/// @nodoc
+class _$RateCopyWithImpl<$Res> implements $RateCopyWith<$Res> {
+  _$RateCopyWithImpl(this._value, this._then);
+
+  final Rate _value;
+  // ignore: unused_field
+  final $Res Function(Rate) _then;
+
+  @override
+  $Res call({
+    Object? rate = freezed,
+    Object? textRate = freezed,
+  }) {
+    return _then(_value.copyWith(
+      rate: rate == freezed
+          ? _value.rate
+          : rate // ignore: cast_nullable_to_non_nullable
+              as int,
+      textRate: textRate == freezed
+          ? _value.textRate
+          : textRate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+abstract class _$RateCopyWith<$Res> implements $RateCopyWith<$Res> {
+  factory _$RateCopyWith(_Rate value, $Res Function(_Rate) then) =
+      __$RateCopyWithImpl<$Res>;
+  @override
+  $Res call({int rate, String textRate});
+}
+
+/// @nodoc
+class __$RateCopyWithImpl<$Res> extends _$RateCopyWithImpl<$Res>
+    implements _$RateCopyWith<$Res> {
+  __$RateCopyWithImpl(_Rate _value, $Res Function(_Rate) _then)
+      : super(_value, (v) => _then(v as _Rate));
+
+  @override
+  _Rate get _value => super._value as _Rate;
+
+  @override
+  $Res call({
+    Object? rate = freezed,
+    Object? textRate = freezed,
+  }) {
+    return _then(_Rate(
+      rate: rate == freezed
+          ? _value.rate
+          : rate // ignore: cast_nullable_to_non_nullable
+              as int,
+      textRate: textRate == freezed
+          ? _value.textRate
+          : textRate // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_Rate implements _Rate {
+  const _$_Rate({required this.rate, required this.textRate});
+
+  factory _$_Rate.fromJson(Map<String, dynamic> json) => _$$_RateFromJson(json);
+
+  @override
+  final int rate;
+  @override
+  final String textRate;
+
+  @override
+  String toString() {
+    return 'Rate(rate: $rate, textRate: $textRate)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Rate &&
+            const DeepCollectionEquality().equals(other.rate, rate) &&
+            const DeepCollectionEquality().equals(other.textRate, textRate));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(rate),
+      const DeepCollectionEquality().hash(textRate));
+
+  @JsonKey(ignore: true)
+  @override
+  _$RateCopyWith<_Rate> get copyWith =>
+      __$RateCopyWithImpl<_Rate>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_RateToJson(this);
+  }
+}
+
+abstract class _Rate implements Rate {
+  const factory _Rate({required int rate, required String textRate}) = _$_Rate;
+
+  factory _Rate.fromJson(Map<String, dynamic> json) = _$_Rate.fromJson;
+
+  @override
+  int get rate;
+  @override
+  String get textRate;
+  @override
+  @JsonKey(ignore: true)
+  _$RateCopyWith<_Rate> get copyWith => throw _privateConstructorUsedError;
 }

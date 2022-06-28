@@ -13,8 +13,19 @@ class UserData with _$UserData {
     required String? phone,
     required String? photoUrl,
     @Default([]) List<String> favourites,
+    @Default([]) List<Rate> rates,
   }) = _UserData;
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
+}
+
+@freezed
+class Rate with _$Rate {
+  const factory Rate({
+    required int rate,
+    required String textRate,
+  }) = _Rate;
+
+  factory Rate.fromJson(Map<String, dynamic> json) => _$RateFromJson(json);
 }

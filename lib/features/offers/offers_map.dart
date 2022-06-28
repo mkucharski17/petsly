@@ -51,9 +51,7 @@ class OffersMapBuilder extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return _OffersMap(
-            offers: state.offers,
-          );
+          return _OffersMap(offers: state.offers);
         },
       ),
     );
@@ -110,11 +108,6 @@ class _OffersMap extends HookWidget {
                   clusterManager.updateMap();
                 },
               ),
-              PageView.builder(
-                itemBuilder: (context, index) {
-                  return Container();
-                },
-              )
             ],
           );
         } else {
@@ -147,14 +140,14 @@ Future<Marker> buildMarker(BuildContext context, Cluster<Offer> cluster) async {
     infoWindow: infoWindow,
     icon: cluster.isMultiple
         ? await getNotChosenClusterBitmap(
-            circleSize: 140,
+            circleSize: 110,
             color: Colors.blue,
             borderColor: Colors.blue.withOpacity(0.28),
             borderSize: 20,
             text: cluster.count.toString(),
           )
         : await getChosenMarkerBitmap(
-            circleSize: 60,
+            circleSize: 50,
             color: Colors.blue,
             borderColor: Colors.white,
             borderSize: 15,
