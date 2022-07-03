@@ -7,7 +7,9 @@ import 'package:petsly/features/care/care_tab.dart';
 import 'package:petsly/features/chat/bloc/conversation_list_cubit.dart';
 import 'package:petsly/features/chat/conversation_list.dart';
 import 'package:petsly/features/offers/bloc/favourites_cubit.dart';
+import 'package:petsly/features/offers/bloc/offers_cubit.dart';
 import 'package:petsly/features/offers/favourites_page.dart';
+import 'package:petsly/features/offers/filters_dialog.dart';
 import 'package:petsly/features/offers/offer_list.dart';
 import 'package:petsly/features/profile/profile.dart';
 
@@ -48,10 +50,19 @@ class HomeScreen extends HookWidget {
                   Navigator.of(context).push(FavouritesScreenRoute()),
               icon: const Icon(Icons.favorite_outline),
             ),
-          IconButton(
-            onPressed: () => context.read<AuthStateCubit>().signOut(),
-            icon: const Icon(Icons.exit_to_app),
-          ),
+          if (selectedIndex.value == 0)
+            IconButton(
+              onPressed: () => FiltersDialog.show(
+                context,
+                initialFilters: context.read<OffersCubit>().state.filters,
+              ),
+              icon: const Icon(Icons.tune),
+            ),
+          if (selectedIndex.value == 1)
+            IconButton(
+              onPressed: () => context.read<AuthStateCubit>().signOut(),
+              icon: const Icon(Icons.exit_to_app),
+            ),
         ],
       ),
       bottomNavigationBar: _BottomBar(selectedIndex: selectedIndex),

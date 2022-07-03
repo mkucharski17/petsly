@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,9 +29,11 @@ class OfferListBuilder extends StatelessWidget {
         builder: (context, state) {
           if (state.loading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state.filteredOffers.isEmpty) {
+            return const Center(child: Text('Brak ofert'));
           }
 
-          return _OfferList(offers: state.offers);
+          return _OfferList(offers: state.filteredOffers);
         },
       ),
     );
@@ -46,12 +50,15 @@ class _OfferList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final latLng = context.read<OffersCubit>().currentLocation;
+
     return BlocBuilder<FavouritesCubit, List<String>>(
       builder: (context, state) {
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           itemBuilder: (context, index) {
             final data = offers[index].data();
+
             return GestureDetector(
               onTap: () {
                 Navigator.of(context)
@@ -69,12 +76,28 @@ class _OfferList extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          data.title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              data.title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (latLng != null)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: Text(
+                                  '(${_calculateDistance(
+                                    latLng.latitude,
+                                    latLng.longitude,
+                                    data.latLng.latitude,
+                                    data.latLng.longitude,
+                                  ).toStringAsFixed(0)} km)',
+                                ),
+                              ),
+                          ],
                         ),
                         GestureDetector(
                           onTap: () =>
@@ -95,6 +118,12 @@ class _OfferList extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
+                    Row(
+                      children: [
+                        for (final type in data.animalTypes)
+                          _AnimalType(animalType: type),
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -104,6 +133,47 @@ class _OfferList extends StatelessWidget {
           itemCount: offers.length,
         );
       },
+    );
+  }
+
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+}
+
+class _AnimalType extends StatelessWidget {
+  const _AnimalType({
+    Key? key,
+    required this.animalType,
+  }) : super(key: key);
+
+  final AnimalType animalType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+          const SizedBox(width: 6),
+          Text(animalType.text()),
+        ],
+      ),
     );
   }
 }

@@ -31,7 +31,10 @@ class ConversationListCubit extends Cubit<ConversationListState> {
   final Firestore firestore;
 
   Future<void> _onMessage(QuerySnapshot<Conversation> snapshot) async {
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentUserId == null) {
+      return;
+    }
 
     final conversations = snapshot.docs.where((element) {
       final firstUserId = element.data().firstUserId;

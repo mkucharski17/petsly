@@ -58,12 +58,12 @@ class _GlobalProviders extends StatelessWidget {
           create: (context) => Firestore(),
         ),
         Provider(
-          create: (context) => LocationService(Location()),
+          create: (context) => LocationService(Location())..init(),
         ),
         Provider(
           create: (context) => LocationSource(
             context.read(),
-          ),
+          )..getInitialLocation(),
         ),
       ],
       child: MultiBlocProvider(
@@ -88,7 +88,8 @@ class _GlobalProviders extends StatelessWidget {
             lazy: false,
             create: (context) => OffersCubit(
               firestore: context.read(),
-            ),
+              locationService: context.read(),
+            )..init(),
           ),
           BlocProvider(
             create: (context) =>

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/features/offers/bloc/favourites_cubit.dart';
 import 'package:petsly/features/offers/bloc/offers_cubit.dart';
+import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
 
 class FavouritesPage extends Page<void> {
   const FavouritesPage({LocalKey? key}) : super(key: key);
@@ -61,43 +62,51 @@ class FavouritesList extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               itemBuilder: (context, index) {
                 final data = offers[index].data();
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            data.title,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(OfferDetailsScreenRoute(offer: data));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              data.title,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () =>
-                                context.read<FavouritesCubit>().toggle(data.id),
-                            child: const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        data.description,
-                        style: const TextStyle(fontSize: 16),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                            GestureDetector(
+                              onTap: () => context
+                                  .read<FavouritesCubit>()
+                                  .toggle(data.id),
+                              child: const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          data.description,
+                          style: const TextStyle(fontSize: 16),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

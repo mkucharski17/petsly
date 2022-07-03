@@ -7,13 +7,15 @@ import 'package:location/location.dart';
 enum PermissionRequestResult { granted, denied, deniedForever }
 
 class LocationService {
-  LocationService(this._location) {
+  LocationService(this._location) {}
+
+  final Location _location;
+
+  void init() {
     locations = _location.onLocationChanged
         .where((event) => event.latitude != null && event.longitude != null)
         .map(_mapLocationData);
   }
-
-  final Location _location;
 
   Future<PermissionRequestResult>? requestPermissionFuture;
 
@@ -35,6 +37,7 @@ class LocationService {
         }
       }
       requestPermissionFuture = null;
+      init();
       return PermissionRequestResult.granted;
     }();
   }
@@ -42,7 +45,7 @@ class LocationService {
   Future<LatLng?> getLocation() async {
     try {
       final res =
-          await _location.getLocation().timeout(const Duration(seconds: 4));
+          await _location.getLocation().timeout(const Duration(seconds: 2));
 
       if (res.latitude != null && res.longitude != null) {
         return LatLng(res.latitude!, res.longitude!);
@@ -56,10 +59,9 @@ class LocationService {
     }
   }
 
-  Future<bool> serviceEnabled() => _location.serviceEnabled();
+  Stream<LatLng>? locations;
 
-  late Stream<LatLng> locations;
-
-  LatLng _mapLocationData(LocationData ld) =>
-      LatLng(ld.latitude!, ld.longitude!);
+  LatLng _mapLocationData(LocationData ld) {
+    return LatLng(ld.latitude!, ld.longitude!);
+  }
 }

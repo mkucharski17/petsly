@@ -69,6 +69,8 @@ class OfferDetailsScreen extends HookWidget {
                       children: [
                         Expanded(
                           child: TextField(
+                            decoration:
+                                const InputDecoration(hintText: 'Nazwa oferty'),
                             controller: titleController,
                             style: const TextStyle(fontSize: 16),
                             onChanged: (title) {
@@ -101,6 +103,8 @@ class OfferDetailsScreen extends HookWidget {
                     ),
                     const SizedBox(height: 36),
                     TextField(
+                      decoration:
+                          const InputDecoration(hintText: 'Opis oferty'),
                       controller: descriptionController,
                       style: const TextStyle(fontSize: 16),
                       onChanged: (description) {
@@ -114,9 +118,7 @@ class OfferDetailsScreen extends HookWidget {
                       children: [
                         for (final animalType in AnimalType.values)
                           Expanded(
-                            child: _AnimalType(
-                              animalType: animalType,
-                            ),
+                            child: AnimalTypeCheckbox(animalType: animalType),
                           )
                       ],
                     ),
@@ -225,8 +227,8 @@ class _Calendar extends HookWidget {
   }
 }
 
-class _AnimalType extends HookWidget {
-  const _AnimalType({
+class AnimalTypeCheckbox extends HookWidget {
+  const AnimalTypeCheckbox({
     Key? key,
     required this.animalType,
   }) : super(key: key);
@@ -239,7 +241,7 @@ class _AnimalType extends HookWidget {
     final isTrue = useState(types.contains(animalType));
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

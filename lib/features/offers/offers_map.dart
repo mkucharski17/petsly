@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +10,7 @@ import 'package:petsly/data/offer/offer.dart';
 import 'package:petsly/features/location/location_source.dart';
 import 'package:petsly/features/offers/bloc/offers_cubit.dart';
 import 'package:petsly/features/offers/favourites_page.dart';
+import 'package:petsly/features/offers/filters_dialog.dart';
 import 'package:petsly/features/offers/offer_details/offer_details_screen.dart';
 
 class OffersMapPage extends Page<void> {
@@ -29,11 +29,27 @@ class OffersMapScreenRoute extends MaterialPageRoute<void> {
         );
 }
 
-class OffersMapBuilder extends StatelessWidget {
+class OffersMapBuilder extends HookWidget {
   const OffersMapBuilder({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final markers = useState(<Marker>{});
+
+    final clusterManager = useMemoized(
+      () => ClusterManager<Offer>(
+        context
+            .read<OffersCubit>()
+            .state
+            .filteredOffers
+            .map((e) => e.data().toCLusterItem()),
+        (m) => markers.value = m,
+        levels: [1, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5, 20.0],
+        markerBuilder: (cluster) => _markerBuilder(context, cluster),
+        initialZoom: 10,
+        stopClusteringZoom: 11,
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Znajdź pomoc'),
@@ -43,43 +59,52 @@ class OffersMapBuilder extends StatelessWidget {
                 Navigator.of(context).push(FavouritesScreenRoute()),
             icon: const Icon(Icons.favorite_outline),
           ),
+          IconButton(
+            onPressed: () => FiltersDialog.show(
+              context,
+              initialFilters: context.read<OffersCubit>().state.filters,
+            ),
+            icon: const Icon(Icons.tune),
+          ),
         ],
       ),
-      body: BlocBuilder<OffersCubit, OffersState>(
+      body: BlocConsumer<OffersCubit, OffersState>(
+        listener: (context, state) {
+          clusterManager.setItems(state.filteredOffers
+              .map((e) => e.data().toCLusterItem())
+              .toList());
+        },
         builder: (context, state) {
           if (state.loading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return _OffersMap(offers: state.offers);
+          return _OffersMap(
+            markers: markers.value,
+            clusterManager: clusterManager,
+          );
         },
       ),
     );
   }
+
+  Future<Marker> _markerBuilder(
+          BuildContext context, Cluster<Offer> cluster) async =>
+      buildMarker(context, cluster);
 }
 
 class _OffersMap extends HookWidget {
   const _OffersMap({
     Key? key,
-    required this.offers,
+    required this.clusterManager,
+    required this.markers,
   }) : super(key: key);
 
-  final List<QueryDocumentSnapshot<Offer>> offers;
+  final ClusterManager clusterManager;
+  final Set<Marker> markers;
 
   @override
   Widget build(BuildContext context) {
-    final markers = useState(<Marker>{});
-    final clusterManager = useMemoized(
-      () => ClusterManager<Offer>(
-        offers.map((e) => e.data().toCLusterItem()),
-        (m) => markers.value = m,
-        levels: [1, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5, 20.0],
-        markerBuilder: (cluster) => _markerBuilder(context, cluster),
-        initialZoom: 10,
-        stopClusteringZoom: 11,
-      ),
-    );
-
     return FutureBuilder<LatLng>(
       future: context.read<LocationSource>().getInitialLocation(),
       builder: (context, snapshot) {
@@ -90,7 +115,7 @@ class _OffersMap extends HookWidget {
           return Stack(
             children: [
               GoogleMap(
-                markers: markers.value,
+                markers: markers,
                 myLocationEnabled: true,
                 zoomControlsEnabled: false,
                 myLocationButtonEnabled: true,
@@ -116,10 +141,6 @@ class _OffersMap extends HookWidget {
       },
     );
   }
-
-  Future<Marker> _markerBuilder(
-          BuildContext context, Cluster<Offer> cluster) async =>
-      buildMarker(context, cluster);
 }
 
 Future<Marker> buildMarker(BuildContext context, Cluster<Offer> cluster) async {

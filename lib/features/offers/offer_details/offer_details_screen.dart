@@ -156,6 +156,7 @@ class OfferDetailsScreen extends StatelessWidget {
                               ),
                           ],
                         ),
+                        const SizedBox(height: 10),
                         if (offerOwner.description != null)
                           Text(
                             offerOwner.description!,
