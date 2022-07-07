@@ -49,6 +49,7 @@ class OffersCubit extends Cubit<OffersState> {
 
   Future<void> filter(Filters filters) async {
     final offers = [...state.offers];
+    var filteredList = <QueryDocumentSnapshot<Offer>>[];
 
     final filteredOffers = offers.where((element) {
       bool typeMatch = false;
@@ -65,7 +66,6 @@ class OffersCubit extends Cubit<OffersState> {
         final latLng = element.data().latLng;
         final distance = _calculateDistance(currentLocation.latitude,
             currentLocation.longitude, latLng.latitude, latLng.longitude);
-
         if (distance <= filters.range) {
           locationMatch = true;
         }
@@ -74,7 +74,21 @@ class OffersCubit extends Cubit<OffersState> {
       }
 
       return locationMatch && typeMatch;
-    });
+    }).toList();
+
+    if (currentLocation != null && filters.orderBy == OrderBy.range) {
+      filteredOffers.sort((a, b) {
+        final aLatLng = a.data().latLng;
+        final aDistance = _calculateDistance(currentLocation!.latitude,
+            currentLocation!.longitude, aLatLng.latitude, aLatLng.longitude);
+
+        final bLatLng = b.data().latLng;
+        final bDistance = _calculateDistance(currentLocation!.latitude,
+            currentLocation!.longitude, bLatLng.latitude, bLatLng.longitude);
+
+        return aDistance.compareTo(bDistance);
+      });
+    }
 
     emit(state.copyWith(
       filteredOffers: filteredOffers.toList(),
@@ -119,5 +133,11 @@ class Filters with _$Filters {
     @Default([AnimalType.cats, AnimalType.dogs, AnimalType.others])
         List<AnimalType> types,
     @Default(100) double range,
+    @Default(OrderBy.newest) OrderBy orderBy,
   }) = _Filters;
+}
+
+enum OrderBy {
+  range,
+  newest,
 }

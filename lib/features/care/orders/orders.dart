@@ -19,7 +19,10 @@ class Orders extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = useCubit(
-      () => OrderListCubit(firestore: context.read())..init(),
+      () => OrderListCubit(
+        firestore: context.read(),
+        yours: true,
+      )..init(),
     );
 
     return BlocBuilder<OrderListCubit, OrderListState>(
@@ -148,35 +151,6 @@ class Orders extends HookWidget {
                             ],
                           ),
                         ),
-                        if (order.status == OrderStatus.requested)
-                          Column(
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  cubit.updateStatus(
-                                    order,
-                                    OrderStatus.accepted,
-                                  );
-                                },
-                                child: const Text(
-                                  'Zaakceptuj',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  cubit.updateStatus(
-                                    order,
-                                    OrderStatus.rejected,
-                                  );
-                                },
-                                child: const Text(
-                                  'Odrzuć',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                            ],
-                          )
                       ],
                     ),
                     const SizedBox(height: 12),

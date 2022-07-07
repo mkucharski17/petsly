@@ -35,7 +35,8 @@ class FiltersDialog extends HookWidget {
                     child: Column(
                       children: [
                         Text(
-                            'Odległość od Ciebie: ${newFilters.value.range.toInt()} [km]'),
+                          'Odległość od Ciebie: ${newFilters.value.range.toInt()} [km]',
+                        ),
                         const SizedBox(height: 8),
                         Slider(
                           value: newFilters.value.range,
@@ -88,6 +89,31 @@ class FiltersDialog extends HookWidget {
                       },
                     ),
                   )
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text('Sortuj od'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Najnowszych'),
+                Radio<OrderBy>(
+                  value: OrderBy.newest,
+                  groupValue: newFilters.value.orderBy,
+                  onChanged: (value) {
+                    newFilters.value =
+                        newFilters.value.copyWith(orderBy: OrderBy.newest);
+                  },
+                ),
+                const Text('Najbliżych'),
+                Radio<OrderBy>(
+                  value: OrderBy.range,
+                  groupValue: newFilters.value.orderBy,
+                  onChanged: (value) {
+                    newFilters.value =
+                        newFilters.value.copyWith(orderBy: OrderBy.range);
+                  },
+                )
               ],
             ),
             const SizedBox(height: 12),

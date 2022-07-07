@@ -110,7 +110,7 @@ class FavouritesList extends StatelessWidget {
                   ),
                 );
               },
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
               itemCount: offers.length,
             ),
     );

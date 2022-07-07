@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,18 +13,33 @@ import 'package:petsly/data/offer/order.dart';
 part 'order_list_cubit.freezed.dart';
 
 class OrderListCubit extends Cubit<OrderListState> {
-  OrderListCubit({required this.firestore}) : super(const OrderListState());
+  OrderListCubit({
+    required this.firestore,
+    required this.yours,
+  }) : super(const OrderListState());
 
+  final bool yours;
   final Firestore firestore;
+  StreamSubscription? subscription;
 
   Future<void> init() async {
     emit(state.copyWith(loading: true));
-    final snapshot = await firestore.getCollection('orders').get();
+    subscription = firestore
+        .getCollection('orders')
+        .withConverter<Order>(
+            fromFirestore: (snapshot, _) => Order.fromJson(snapshot.data()!),
+            toFirestore: (order, _) => order.toJson())
+        .snapshots()
+        .listen(_onMessage);
+  }
 
+  void _onMessage(QuerySnapshot<Order> snapshot) {
     final orders = snapshot.docs
-        .map((e) => Order.fromJson(e.mappedData))
+        .map((e) => e.data())
         .where(
-          (e) => e.offer.ownerId == FirebaseAuth.instance.currentUser!.uid,
+          (e) =>
+              (yours ? e.clientId : e.offer.ownerId) ==
+              FirebaseAuth.instance.currentUser!.uid,
         )
         .toList();
     emit(state.copyWith(orderList: orders, loading: false));

@@ -245,10 +245,12 @@ class _$FiltersTearOff {
         AnimalType.dogs,
         AnimalType.others
       ],
-      double range = 100}) {
+      double range = 100,
+      OrderBy orderBy = OrderBy.newest}) {
     return _Filters(
       types: types,
       range: range,
+      orderBy: orderBy,
     );
   }
 }
@@ -260,6 +262,7 @@ const $Filters = _$FiltersTearOff();
 mixin _$Filters {
   List<AnimalType> get types => throw _privateConstructorUsedError;
   double get range => throw _privateConstructorUsedError;
+  OrderBy get orderBy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FiltersCopyWith<Filters> get copyWith => throw _privateConstructorUsedError;
@@ -269,7 +272,7 @@ mixin _$Filters {
 abstract class $FiltersCopyWith<$Res> {
   factory $FiltersCopyWith(Filters value, $Res Function(Filters) then) =
       _$FiltersCopyWithImpl<$Res>;
-  $Res call({List<AnimalType> types, double range});
+  $Res call({List<AnimalType> types, double range, OrderBy orderBy});
 }
 
 /// @nodoc
@@ -284,6 +287,7 @@ class _$FiltersCopyWithImpl<$Res> implements $FiltersCopyWith<$Res> {
   $Res call({
     Object? types = freezed,
     Object? range = freezed,
+    Object? orderBy = freezed,
   }) {
     return _then(_value.copyWith(
       types: types == freezed
@@ -294,6 +298,10 @@ class _$FiltersCopyWithImpl<$Res> implements $FiltersCopyWith<$Res> {
           ? _value.range
           : range // ignore: cast_nullable_to_non_nullable
               as double,
+      orderBy: orderBy == freezed
+          ? _value.orderBy
+          : orderBy // ignore: cast_nullable_to_non_nullable
+              as OrderBy,
     ));
   }
 }
@@ -303,7 +311,7 @@ abstract class _$FiltersCopyWith<$Res> implements $FiltersCopyWith<$Res> {
   factory _$FiltersCopyWith(_Filters value, $Res Function(_Filters) then) =
       __$FiltersCopyWithImpl<$Res>;
   @override
-  $Res call({List<AnimalType> types, double range});
+  $Res call({List<AnimalType> types, double range, OrderBy orderBy});
 }
 
 /// @nodoc
@@ -319,6 +327,7 @@ class __$FiltersCopyWithImpl<$Res> extends _$FiltersCopyWithImpl<$Res>
   $Res call({
     Object? types = freezed,
     Object? range = freezed,
+    Object? orderBy = freezed,
   }) {
     return _then(_Filters(
       types: types == freezed
@@ -329,6 +338,10 @@ class __$FiltersCopyWithImpl<$Res> extends _$FiltersCopyWithImpl<$Res>
           ? _value.range
           : range // ignore: cast_nullable_to_non_nullable
               as double,
+      orderBy: orderBy == freezed
+          ? _value.orderBy
+          : orderBy // ignore: cast_nullable_to_non_nullable
+              as OrderBy,
     ));
   }
 }
@@ -338,7 +351,8 @@ class __$FiltersCopyWithImpl<$Res> extends _$FiltersCopyWithImpl<$Res>
 class _$_Filters implements _Filters {
   const _$_Filters(
       {this.types = const [AnimalType.cats, AnimalType.dogs, AnimalType.others],
-      this.range = 100});
+      this.range = 100,
+      this.orderBy = OrderBy.newest});
 
   @JsonKey()
   @override
@@ -346,10 +360,13 @@ class _$_Filters implements _Filters {
   @JsonKey()
   @override
   final double range;
+  @JsonKey()
+  @override
+  final OrderBy orderBy;
 
   @override
   String toString() {
-    return 'Filters(types: $types, range: $range)';
+    return 'Filters(types: $types, range: $range, orderBy: $orderBy)';
   }
 
   @override
@@ -358,14 +375,16 @@ class _$_Filters implements _Filters {
         (other.runtimeType == runtimeType &&
             other is _Filters &&
             const DeepCollectionEquality().equals(other.types, types) &&
-            const DeepCollectionEquality().equals(other.range, range));
+            const DeepCollectionEquality().equals(other.range, range) &&
+            const DeepCollectionEquality().equals(other.orderBy, orderBy));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(types),
-      const DeepCollectionEquality().hash(range));
+      const DeepCollectionEquality().hash(range),
+      const DeepCollectionEquality().hash(orderBy));
 
   @JsonKey(ignore: true)
   @override
@@ -374,12 +393,15 @@ class _$_Filters implements _Filters {
 }
 
 abstract class _Filters implements Filters {
-  const factory _Filters({List<AnimalType> types, double range}) = _$_Filters;
+  const factory _Filters(
+      {List<AnimalType> types, double range, OrderBy orderBy}) = _$_Filters;
 
   @override
   List<AnimalType> get types;
   @override
   double get range;
+  @override
+  OrderBy get orderBy;
   @override
   @JsonKey(ignore: true)
   _$FiltersCopyWith<_Filters> get copyWith =>

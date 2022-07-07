@@ -34,7 +34,7 @@ class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
     final conversation = state.conversation;
     final message = Message(
       senderId: currentUserId,
-      dateTime: DateTime.now().toUtc(),
+      dateTime: DateTime.now(),
       content: messageContent,
     );
 
@@ -90,8 +90,8 @@ class ConversationDetailsCubit extends Cubit<ConversationDetailsState> {
       final firstUserId = element.data().firstUserId;
       final secondUserId = element.data().secondUserId;
 
-      return firstUserId == currentUserId && secondUserId == otherUser ||
-          firstUserId == otherUser && secondUserId == currentUserId;
+      return firstUserId == currentUserId && secondUserId == otherUser.id ||
+          firstUserId == otherUser.id && secondUserId == currentUserId;
     });
 
     emit(state.copyWith(

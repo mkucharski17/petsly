@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petsly/features/care/your_offers/add_offer_bottom_sheet.dart';
 import 'package:petsly/features/care/your_offers/bloc/your_offers_cubit.dart';
 import 'package:petsly/features/care/your_offers/editable_offer_page.dart';
+import 'package:petsly/features/care/your_offers/offer_orders_page.dart';
 
 class YourOffers extends StatelessWidget {
   const YourOffers({Key? key}) : super(key: key);
@@ -88,6 +89,22 @@ class YourOffers extends StatelessWidget {
                             style: const TextStyle(fontSize: 16),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
+                          ),
+                          const SizedBox(height: 12),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                OfferOrdersScreenRoute(offer: data),
+                              );
+                            },
+                            child: const Text(
+                              'Pokaż zamówiena',
+                              style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ],
                       ),
